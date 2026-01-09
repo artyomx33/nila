@@ -89,7 +89,7 @@ export function Footer() {
               ))}
               <li>
                 <Link
-                  href="/admin/dashboard"
+                  href="/app/admin/dashboard"
                   className="text-charcoal-600 hover:text-nila-400 transition-colors text-sm inline-flex items-center group"
                 >
                   <span className="w-0 h-px bg-nila-500 group-hover:w-3 transition-all duration-300 mr-0 group-hover:mr-2" />

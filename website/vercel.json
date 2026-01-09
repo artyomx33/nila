@@ -29,6 +29,10 @@
   ],
   "rewrites": [
     {
+      "source": "/app/:path*",
+      "destination": "https://app-eta-ebon-11.vercel.app/app/:path*"
+    },
+    {
       "source": "/robots.txt",
       "destination": "/api/robots"
     },

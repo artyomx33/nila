@@ -88,7 +88,7 @@ export function Header() {
               );
             })}
             <Link
-              href="/admin/dashboard"
+              href="/app/admin/dashboard"
               className="text-sm font-medium text-charcoal-600 hover:text-charcoal-400 transition-colors"
             >
               Portal
@@ -178,7 +178,7 @@ export function Header() {
                     }}
                   >
                     <Link
-                      href="/admin/dashboard"
+                      href="/app/admin/dashboard"
                       className="block px-4 py-3 rounded-lg text-base font-medium text-charcoal-500 hover:text-charcoal-300 hover:bg-charcoal-800/50 transition-colors"
                       onClick={() => setMobileMenuOpen(false)}
                     >
