@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useTranslations } from "next-intl";
 import { Booking } from "@/types";
 import { CalendarHeader } from "./CalendarHeader";
 import { CalendarRow } from "./CalendarRow";
@@ -25,6 +26,8 @@ export function CalendarTimeline({
   endDate,
   onBookingClick,
 }: CalendarTimelineProps) {
+  const t = useTranslations("calendar");
+  const tBookings = useTranslations("bookings");
   const [dates, setDates] = useState<Date[]>([]);
 
   useEffect(() => {
@@ -49,7 +52,7 @@ export function CalendarTimeline({
   if (dates.length === 0) {
     return (
       <div className="flex items-center justify-center h-64 text-gray-500">
-        Cargando calendario...
+        {t("loadingCalendar")}
       </div>
     );
   }
@@ -73,22 +76,22 @@ export function CalendarTimeline({
 
       {/* Legend */}
       <div className="border-t border-gray-200 bg-gray-50 px-4 py-3 flex items-center gap-6">
-        <div className="text-xs font-medium text-gray-500">Fuente:</div>
+        <div className="text-xs font-medium text-gray-500">{t("source")}:</div>
         <div className="flex items-center gap-2">
           <div className="w-4 h-4 rounded bg-teal-500 border border-teal-600" />
-          <span className="text-xs text-gray-700">Directo</span>
+          <span className="text-xs text-gray-700">{tBookings("direct")}</span>
         </div>
         <div className="flex items-center gap-2">
           <div className="w-4 h-4 rounded bg-orange-400 border border-orange-500" />
-          <span className="text-xs text-gray-700">Airbnb</span>
+          <span className="text-xs text-gray-700">{tBookings("airbnb")}</span>
         </div>
         <div className="flex items-center gap-2">
           <div className="w-4 h-4 rounded bg-blue-500 border border-blue-600" />
-          <span className="text-xs text-gray-700">Booking.com</span>
+          <span className="text-xs text-gray-700">{tBookings("bookingCom")}</span>
         </div>
         <div className="flex items-center gap-2">
           <div className="w-4 h-4 rounded bg-purple-500 border border-purple-600" />
-          <span className="text-xs text-gray-700">Propietario</span>
+          <span className="text-xs text-gray-700">{tBookings("owner")}</span>
         </div>
       </div>
     </div>

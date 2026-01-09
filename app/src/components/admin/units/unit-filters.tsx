@@ -6,6 +6,7 @@
 "use client";
 
 import React from "react";
+import { useTranslations } from "next-intl";
 import { UnitStatus, UnitType } from "@/types";
 import { Input } from "@/components/ui/input";
 import { Select, SelectOption } from "@/components/ui/select";
@@ -35,21 +36,23 @@ export function UnitFilters({
   onTypeChange,
   stats,
 }: UnitFiltersProps) {
+  const t = useTranslations("units");
+
   const statusOptions: SelectOption[] = [
-    { value: "all", label: "All Statuses" },
-    { value: "available", label: "Available" },
-    { value: "occupied", label: "Occupied" },
-    { value: "maintenance", label: "Maintenance" },
-    { value: "unavailable", label: "Unavailable" },
+    { value: "all", label: t("allStatuses") },
+    { value: "available", label: t("available") },
+    { value: "occupied", label: t("occupied") },
+    { value: "maintenance", label: t("maintenance") },
+    { value: "unavailable", label: t("unavailable") },
   ];
 
   const typeOptions: SelectOption[] = [
-    { value: "all", label: "All Types" },
-    { value: "apartment", label: "Apartment" },
-    { value: "condo", label: "Condo" },
-    { value: "villa", label: "Villa" },
-    { value: "studio", label: "Studio" },
-    { value: "penthouse", label: "Penthouse" },
+    { value: "all", label: t("allTypes") },
+    { value: "apartment", label: t("apartment") },
+    { value: "condo", label: t("condo") },
+    { value: "villa", label: t("villa") },
+    { value: "studio", label: t("studio") },
+    { value: "penthouse", label: t("penthouse") },
   ];
 
   return (
@@ -58,7 +61,7 @@ export function UnitFilters({
       <div className="w-full md:w-96">
         <Input
           type="search"
-          placeholder="Search by name or neighborhood..."
+          placeholder={t("searchByNameNeighborhood")}
           value={searchQuery}
           onChange={(e) => onSearchChange(e.target.value)}
           className="w-full"
@@ -77,7 +80,7 @@ export function UnitFilters({
                 : "bg-gray-800 text-gray-400 hover:bg-gray-700"
             }`}
           >
-            All
+            {t("allUnits")}
             {stats && <span className="ml-1.5">({stats.total})</span>}
           </button>
           <button
@@ -88,7 +91,7 @@ export function UnitFilters({
                 : "bg-gray-800 text-gray-400 hover:bg-gray-700"
             }`}
           >
-            Available
+            {t("available")}
             {stats && <span className="ml-1.5">({stats.available})</span>}
           </button>
           <button
@@ -99,7 +102,7 @@ export function UnitFilters({
                 : "bg-gray-800 text-gray-400 hover:bg-gray-700"
             }`}
           >
-            Occupied
+            {t("occupied")}
             {stats && <span className="ml-1.5">({stats.occupied})</span>}
           </button>
           <button
@@ -110,7 +113,7 @@ export function UnitFilters({
                 : "bg-gray-800 text-gray-400 hover:bg-gray-700"
             }`}
           >
-            Maintenance
+            {t("maintenance")}
             {stats && <span className="ml-1.5">({stats.maintenance})</span>}
           </button>
         </div>
@@ -132,20 +135,20 @@ export function UnitFilters({
           <>
             <div className="h-8 w-px bg-gray-700"></div>
             <div className="flex items-center gap-2">
-              <span className="text-sm text-gray-400">Active filters:</span>
+              <span className="text-sm text-gray-400">{t("activeFilters")}:</span>
               {selectedStatus !== "all" && (
                 <Badge variant="teal" size="sm">
-                  Status: {selectedStatus}
+                  {t("status")}: {selectedStatus}
                 </Badge>
               )}
               {selectedType !== "all" && (
                 <Badge variant="teal" size="sm">
-                  Type: {selectedType}
+                  {t("type")}: {selectedType}
                 </Badge>
               )}
               {searchQuery && (
                 <Badge variant="teal" size="sm">
-                  Search: &quot;{searchQuery}&quot;
+                  {t("searchPlaceholder").split(" ")[0]}: &quot;{searchQuery}&quot;
                 </Badge>
               )}
               <button
@@ -156,7 +159,7 @@ export function UnitFilters({
                 }}
                 className="text-xs text-teal-400 hover:text-teal-300 underline"
               >
-                Clear all
+                {t("clearAll")}
               </button>
             </div>
           </>

@@ -6,6 +6,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { supabase } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Upload, X, FileText, CheckCircle, AlertCircle } from "lucide-react";
@@ -28,12 +29,14 @@ export function DocumentUpload({
   existingUrl,
   onUploadComplete,
 }: DocumentUploadProps) {
+  const t = useTranslations("documents");
+  const tCommon = useTranslations("common");
   const [status, setStatus] = useState<UploadStatus>("idle");
   const [uploadedUrl, setUploadedUrl] = useState<string | null>(existingUrl || null);
   const [error, setError] = useState<string | null>(null);
   const [file, setFile] = useState<File | null>(null);
 
-  const documentLabel = documentType === "passport" ? "Pasaporte" : "Identificación";
+  const documentLabel = documentType === "passport" ? t("passport") : t("idCard");
   const bucketName = "guest-documents";
   const fieldName = documentType === "passport" ? "guest_passport_url" : "guest_id_url";
 
@@ -44,7 +47,7 @@ export function DocumentUpload({
     // Validate file type
     const validTypes = ["image/jpeg", "image/jpg", "image/png", "image/webp", "application/pdf"];
     if (!validTypes.includes(selectedFile.type)) {
-      setError("Formato inválido. Solo se permiten imágenes (JPG, PNG, WEBP) o PDF.");
+      setError(t("allowedTypes"));
       setStatus("error");
       return;
     }
@@ -52,7 +55,7 @@ export function DocumentUpload({
     // Validate file size (max 5MB)
     const maxSize = 5 * 1024 * 1024;
     if (selectedFile.size > maxSize) {
-      setError("El archivo es demasiado grande. Tamaño máximo: 5MB.");
+      setError(t("maxSize"));
       setStatus("error");
       return;
     }
@@ -112,7 +115,7 @@ export function DocumentUpload({
       }
     } catch (err) {
       console.error("Upload error:", err);
-      setError(err instanceof Error ? err.message : "Error al subir el archivo");
+      setError(err instanceof Error ? err.message : "Error uploading file");
       setStatus("error");
     }
   };
@@ -124,7 +127,7 @@ export function DocumentUpload({
       // Extract file path from URL
       const urlParts = uploadedUrl.split(`${bucketName}/`);
       if (urlParts.length < 2) {
-        throw new Error("URL inválida");
+        throw new Error("Invalid URL");
       }
       const filePath = urlParts[1];
 
@@ -156,7 +159,7 @@ export function DocumentUpload({
       }
     } catch (err) {
       console.error("Remove error:", err);
-      setError(err instanceof Error ? err.message : "Error al eliminar el archivo");
+      setError(err instanceof Error ? err.message : "Error removing file");
       setStatus("error");
     }
   };
@@ -195,10 +198,10 @@ export function DocumentUpload({
             >
               <Upload className="w-10 h-10 text-gray-400 mb-2" />
               <p className="text-sm text-gray-600 mb-1">
-                Haz clic para seleccionar {documentLabel.toLowerCase()}
+                {t("dragDrop")}
               </p>
               <p className="text-xs text-gray-500">
-                PNG, JPG, WEBP o PDF (máx. 5MB)
+                {t("allowedTypes")}
               </p>
             </label>
           </div>
@@ -221,7 +224,7 @@ export function DocumentUpload({
                 size="sm"
                 variant="primary"
               >
-                Subir
+                {t("upload")}
               </Button>
             </div>
           )}
@@ -246,7 +249,7 @@ export function DocumentUpload({
                   className="opacity-0 group-hover:opacity-100 transition-opacity"
                 >
                   <X className="w-4 h-4 mr-1" />
-                  Eliminar
+                  {t("remove")}
                 </Button>
               </div>
             </div>
@@ -265,7 +268,7 @@ export function DocumentUpload({
                       rel="noopener noreferrer"
                       className="text-xs text-teal-600 hover:underline"
                     >
-                      Ver documento
+                      {t("clickToView")}
                     </a>
                   </div>
                 </div>
@@ -286,7 +289,7 @@ export function DocumentUpload({
       {status === "success" && (
         <div className="flex items-center gap-2 text-sm text-green-600 bg-green-50 p-3 rounded-lg">
           <CheckCircle className="w-4 h-4" />
-          <span>Documento subido exitosamente</span>
+          <span>{t("uploaded")}</span>
         </div>
       )}
 

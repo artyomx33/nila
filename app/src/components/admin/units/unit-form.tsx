@@ -7,6 +7,7 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { Unit, UnitType, RentalType, UnitStatus } from "@/types";
 import { useUnitsStore } from "@/lib/stores/units-store";
 import { Input } from "@/components/ui/input";
@@ -21,6 +22,8 @@ interface UnitFormProps {
 
 export function UnitForm({ unit, mode }: UnitFormProps) {
   const router = useRouter();
+  const t = useTranslations("units");
+  const tc = useTranslations("common");
   const { addUnit, updateUnit } = useUnitsStore();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -76,19 +79,19 @@ export function UnitForm({ unit, mode }: UnitFormProps) {
     const newErrors: Record<string, string> = {};
 
     if (!formData.name.trim()) {
-      newErrors.name = "Unit name is required";
+      newErrors.name = t("nameRequired");
     }
     if (!formData.neighborhood.trim()) {
-      newErrors.neighborhood = "Neighborhood is required";
+      newErrors.neighborhood = t("neighborhoodRequired");
     }
     if (formData.bedrooms < 0) {
-      newErrors.bedrooms = "Bedrooms must be 0 or more";
+      newErrors.bedrooms = t("bedroomsMin");
     }
     if (formData.bathrooms < 1) {
-      newErrors.bathrooms = "At least 1 bathroom is required";
+      newErrors.bathrooms = t("bathroomsMin");
     }
     if (formData.pricing_base <= 0) {
-      newErrors.pricing_base = "Base price must be greater than 0";
+      newErrors.pricing_base = t("basePriceRequired");
     }
 
     setErrors(newErrors);
@@ -168,31 +171,31 @@ export function UnitForm({ unit, mode }: UnitFormProps) {
       {/* Basic Information */}
       <Card>
         <CardHeader>
-          <CardTitle>Basic Information</CardTitle>
+          <CardTitle>{t("basicInformation")}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Input
-              label="Unit Name"
+              label={t("unitName")}
               value={formData.name}
               onChange={(e) => handleInputChange("name", e.target.value)}
               error={errors.name}
               placeholder="e.g., Casa Azul"
             />
             <Select
-              label="Type"
+              label={t("type")}
               value={formData.type}
               onChange={(e) => handleInputChange("type", e.target.value)}
               options={[
-                { value: "apartment", label: "Apartment" },
-                { value: "condo", label: "Condo" },
-                { value: "villa", label: "Villa" },
-                { value: "studio", label: "Studio" },
-                { value: "penthouse", label: "Penthouse" },
+                { value: "apartment", label: t("apartment") },
+                { value: "condo", label: t("condo") },
+                { value: "villa", label: t("villa") },
+                { value: "studio", label: t("studio") },
+                { value: "penthouse", label: t("penthouse") },
               ]}
             />
             <Input
-              label="Bedrooms"
+              label={t("bedrooms")}
               type="number"
               value={formData.bedrooms}
               onChange={(e) => handleInputChange("bedrooms", parseInt(e.target.value))}
@@ -200,7 +203,7 @@ export function UnitForm({ unit, mode }: UnitFormProps) {
               min="0"
             />
             <Input
-              label="Bathrooms"
+              label={t("bathrooms")}
               type="number"
               value={formData.bathrooms}
               onChange={(e) => handleInputChange("bathrooms", parseInt(e.target.value))}
@@ -208,14 +211,14 @@ export function UnitForm({ unit, mode }: UnitFormProps) {
               min="1"
             />
             <Input
-              label="Floor"
+              label={t("floor")}
               type="number"
               value={formData.floor}
               onChange={(e) => handleInputChange("floor", parseInt(e.target.value))}
               min="0"
             />
             <Input
-              label="Neighborhood"
+              label={t("neighborhood")}
               value={formData.neighborhood}
               onChange={(e) => handleInputChange("neighborhood", e.target.value)}
               error={errors.neighborhood}
@@ -228,29 +231,29 @@ export function UnitForm({ unit, mode }: UnitFormProps) {
       {/* Settings */}
       <Card>
         <CardHeader>
-          <CardTitle>Settings</CardTitle>
+          <CardTitle>{t("settings")}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <Select
-              label="Rental Type"
+              label={t("rentalType")}
               value={formData.rental_type}
               onChange={(e) => handleInputChange("rental_type", e.target.value)}
               options={[
-                { value: "short", label: "Short Term" },
-                { value: "long", label: "Long Term" },
-                { value: "both", label: "Both" },
+                { value: "short", label: t("shortTerm") },
+                { value: "long", label: t("longTerm") },
+                { value: "both", label: t("both") },
               ]}
             />
             <Select
-              label="Status"
+              label={t("status")}
               value={formData.status}
               onChange={(e) => handleInputChange("status", e.target.value)}
               options={[
-                { value: "available", label: "Available" },
-                { value: "occupied", label: "Occupied" },
-                { value: "maintenance", label: "Maintenance" },
-                { value: "unavailable", label: "Unavailable" },
+                { value: "available", label: t("available") },
+                { value: "occupied", label: t("occupied") },
+                { value: "maintenance", label: t("maintenance") },
+                { value: "unavailable", label: t("unavailable") },
               ]}
             />
             <div className="flex items-center mt-8">
@@ -261,7 +264,7 @@ export function UnitForm({ unit, mode }: UnitFormProps) {
                   onChange={(e) => handleInputChange("is_smart", e.target.checked)}
                   className="w-5 h-5 rounded border-gray-700 bg-gray-800 text-teal-500 focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 focus:ring-offset-gray-900"
                 />
-                <span className="ml-2 text-sm text-gray-300">Smart Home Features</span>
+                <span className="ml-2 text-sm text-gray-300">{t("smartHomeFeatures")}</span>
               </label>
             </div>
           </div>
@@ -271,12 +274,12 @@ export function UnitForm({ unit, mode }: UnitFormProps) {
       {/* Pricing */}
       <Card>
         <CardHeader>
-          <CardTitle>Pricing</CardTitle>
+          <CardTitle>{t("pricing")}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             <Input
-              label="Base Rate (per night)"
+              label={t("baseRatePerNight")}
               type="number"
               value={formData.pricing_base}
               onChange={(e) => handleInputChange("pricing_base", parseFloat(e.target.value))}
@@ -285,7 +288,7 @@ export function UnitForm({ unit, mode }: UnitFormProps) {
               step="0.01"
             />
             <Input
-              label="High Season Rate"
+              label={t("highSeasonRate")}
               type="number"
               value={formData.pricing_high_season}
               onChange={(e) => handleInputChange("pricing_high_season", parseFloat(e.target.value))}
@@ -293,7 +296,7 @@ export function UnitForm({ unit, mode }: UnitFormProps) {
               step="0.01"
             />
             <Input
-              label="Low Season Rate"
+              label={t("lowSeasonRate")}
               type="number"
               value={formData.pricing_low_season}
               onChange={(e) => handleInputChange("pricing_low_season", parseFloat(e.target.value))}
@@ -301,7 +304,7 @@ export function UnitForm({ unit, mode }: UnitFormProps) {
               step="0.01"
             />
             <Input
-              label="Cleaning Fee"
+              label={t("cleaningFee")}
               type="number"
               value={formData.pricing_cleaning_fee}
               onChange={(e) => handleInputChange("pricing_cleaning_fee", parseFloat(e.target.value))}
@@ -309,12 +312,12 @@ export function UnitForm({ unit, mode }: UnitFormProps) {
               step="0.01"
             />
             <Select
-              label="Currency"
+              label={t("currency")}
               value={formData.pricing_currency}
               onChange={(e) => handleInputChange("pricing_currency", e.target.value)}
               options={[
-                { value: "MXN", label: "MXN (Mexican Peso)" },
-                { value: "USD", label: "USD (US Dollar)" },
+                { value: "MXN", label: t("mxn") },
+                { value: "USD", label: t("usd") },
               ]}
             />
           </div>
@@ -324,23 +327,23 @@ export function UnitForm({ unit, mode }: UnitFormProps) {
       {/* Amenities */}
       <Card>
         <CardHeader>
-          <CardTitle>Amenities</CardTitle>
+          <CardTitle>{t("amenities")}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {[
-              { key: "wifi", label: "WiFi" },
-              { key: "ac", label: "Air Conditioning" },
-              { key: "pool", label: "Pool" },
-              { key: "parking", label: "Parking" },
-              { key: "kitchen", label: "Kitchen" },
-              { key: "washer", label: "Washer" },
-              { key: "dryer", label: "Dryer" },
-              { key: "tv", label: "TV" },
-              { key: "workspace", label: "Workspace" },
-              { key: "bbq", label: "BBQ" },
-              { key: "garden", label: "Garden" },
-              { key: "gym", label: "Gym" },
+              { key: "wifi", label: t("wifi") },
+              { key: "ac", label: t("airConditioning") },
+              { key: "pool", label: t("pool") },
+              { key: "parking", label: t("parking") },
+              { key: "kitchen", label: t("kitchen") },
+              { key: "washer", label: t("washer") },
+              { key: "dryer", label: t("dryer") },
+              { key: "tv", label: t("tv") },
+              { key: "workspace", label: t("workspace") },
+              { key: "bbq", label: t("bbq") },
+              { key: "garden", label: t("garden") },
+              { key: "gym", label: t("gym") },
             ].map((amenity) => (
               <label key={amenity.key} className="flex items-center cursor-pointer">
                 <input
@@ -359,18 +362,18 @@ export function UnitForm({ unit, mode }: UnitFormProps) {
       {/* Platform URLs */}
       <Card>
         <CardHeader>
-          <CardTitle>Platform URLs</CardTitle>
+          <CardTitle>{t("platformUrls")}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Input
-              label="Airbnb URL"
+              label={t("airbnbUrl")}
               value={formData.platform_airbnb}
               onChange={(e) => handleInputChange("platform_airbnb", e.target.value)}
               placeholder="https://airbnb.com/rooms/..."
             />
             <Input
-              label="Booking.com URL"
+              label={t("bookingUrl")}
               value={formData.platform_booking}
               onChange={(e) => handleInputChange("platform_booking", e.target.value)}
               placeholder="https://booking.com/..."
@@ -382,14 +385,14 @@ export function UnitForm({ unit, mode }: UnitFormProps) {
       {/* Guest Guide */}
       <Card>
         <CardHeader>
-          <CardTitle>Guest Guide</CardTitle>
+          <CardTitle>{t("guestGuide")}</CardTitle>
         </CardHeader>
         <CardContent>
           <textarea
             value={formData.guide}
             onChange={(e) => handleInputChange("guide", e.target.value)}
             rows={6}
-            placeholder="Welcome message, house rules, check-in/out instructions, WiFi password, etc."
+            placeholder={t("guestGuidePlaceholder")}
             className="w-full px-3 py-2 bg-gray-800/50 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent"
           />
         </CardContent>
@@ -403,7 +406,7 @@ export function UnitForm({ unit, mode }: UnitFormProps) {
           onClick={() => router.back()}
           disabled={isSubmitting}
         >
-          Cancel
+          {tc("cancel")}
         </Button>
         <Button
           type="submit"
@@ -411,7 +414,7 @@ export function UnitForm({ unit, mode }: UnitFormProps) {
           loading={isSubmitting}
           disabled={isSubmitting}
         >
-          {mode === "create" ? "Create Unit" : "Save Changes"}
+          {mode === "create" ? t("createUnit") : t("saveChanges")}
         </Button>
       </div>
     </form>

@@ -3,6 +3,9 @@
 // Display payment summary with total paid vs total due
 // ============================================
 
+"use client";
+
+import { useTranslations } from "next-intl";
 import { formatCurrency } from "@/lib/utils";
 
 interface PaymentSummaryProps {
@@ -18,6 +21,8 @@ export function PaymentSummary({
   currency,
   paymentCount,
 }: PaymentSummaryProps) {
+  const t = useTranslations("payments");
+
   const remaining = totalDue - totalPaid;
   const percentPaid = totalDue > 0 ? (totalPaid / totalDue) * 100 : 0;
 
@@ -29,10 +34,10 @@ export function PaymentSummary({
   };
 
   const getStatusText = () => {
-    if (remaining <= 0) return "Pagado Completo";
-    if (percentPaid >= 50) return "Pago Parcial";
-    if (percentPaid > 0) return "Pago Mínimo";
-    return "Pendiente de Pago";
+    if (remaining <= 0) return t("paidInFull");
+    if (percentPaid >= 50) return t("partialPayment");
+    if (percentPaid > 0) return t("minimalPayment");
+    return t("pendingPayment");
   };
 
   const getStatusBgColor = () => {
@@ -61,7 +66,7 @@ export function PaymentSummary({
       {/* Status Badge */}
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-sm font-semibold text-zinc-300">
-          Resumen de Pagos
+          {t("paymentSummary")}
         </h3>
         <span
           className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusBgColor()} ${getStatusTextColor()} border ${getStatusBorderColor()}`}
@@ -73,10 +78,8 @@ export function PaymentSummary({
       {/* Progress Bar */}
       <div className="mb-4">
         <div className="flex items-center justify-between text-xs text-zinc-500 mb-1.5">
-          <span>{percentPaid.toFixed(0)}% pagado</span>
-          <span>
-            {paymentCount} pago{paymentCount !== 1 ? "s" : ""}
-          </span>
+          <span>{t("percentPaid", { percent: percentPaid.toFixed(0) })}</span>
+          <span>{t("paymentsCount", { count: paymentCount })}</span>
         </div>
         <div className="h-2 bg-charcoal-900 rounded-full overflow-hidden">
           <div
@@ -89,14 +92,14 @@ export function PaymentSummary({
       {/* Amount Details */}
       <div className="space-y-3">
         <div className="flex justify-between items-center">
-          <span className="text-sm text-zinc-400">Total a pagar</span>
+          <span className="text-sm text-zinc-400">{t("totalDue")}</span>
           <span className="text-base font-semibold text-white">
             {formatCurrency(totalDue, currency)}
           </span>
         </div>
 
         <div className="flex justify-between items-center">
-          <span className="text-sm text-zinc-400">Total pagado</span>
+          <span className="text-sm text-zinc-400">{t("totalPaid")}</span>
           <span className="text-base font-semibold text-teal-400">
             {formatCurrency(totalPaid, currency)}
           </span>
@@ -105,7 +108,7 @@ export function PaymentSummary({
         <div className="pt-3 border-t border-charcoal-700">
           <div className="flex justify-between items-center">
             <span className="text-sm font-medium text-zinc-300">
-              {remaining <= 0 ? "Excedente" : "Pendiente"}
+              {remaining <= 0 ? t("overpayment") : t("remaining")}
             </span>
             <span
               className={`text-lg font-bold ${
@@ -139,10 +142,7 @@ export function PaymentSummary({
                 d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
               />
             </svg>
-            <p className="text-xs text-green-400">
-              El huésped ha pagado más del total. Considera registrar un
-              reembolso si es necesario.
-            </p>
+            <p className="text-xs text-green-400">{t("overpaymentWarning")}</p>
           </div>
         </div>
       )}
@@ -164,9 +164,7 @@ export function PaymentSummary({
                 d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
               />
             </svg>
-            <p className="text-xs text-red-400">
-              No se han registrado pagos para esta reservación.
-            </p>
+            <p className="text-xs text-red-400">{t("noPaymentsWarning")}</p>
           </div>
         </div>
       )}

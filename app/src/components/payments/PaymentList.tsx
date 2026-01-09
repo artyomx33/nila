@@ -3,6 +3,9 @@
 // Display all payments for a booking
 // ============================================
 
+"use client";
+
+import { useTranslations } from "next-intl";
 import { Payment } from "@/types";
 import { formatCurrency, formatDate } from "@/lib/utils";
 
@@ -11,27 +14,30 @@ interface PaymentListProps {
   onDeletePayment?: (paymentId: string) => void;
 }
 
-const PAYMENT_TYPE_LABELS: Record<Payment["payment_type"], string> = {
-  reservation_deposit: "Depósito de Reservación",
-  security_deposit: "Depósito de Seguridad",
-  rent: "Renta",
-  cleaning: "Limpieza",
-  utilities: "Servicios",
-  damage: "Daños",
-  refund: "Reembolso",
-  other: "Otro",
-};
-
-const PAYMENT_METHOD_LABELS: Record<Payment["method"], string> = {
-  cash: "Efectivo",
-  card: "Tarjeta",
-  transfer: "Transferencia",
-  paypal: "PayPal",
-  stripe: "Stripe",
-  other: "Otro",
-};
-
 export function PaymentList({ payments, onDeletePayment }: PaymentListProps) {
+  const t = useTranslations("payments");
+  const tc = useTranslations("common");
+
+  const PAYMENT_TYPE_LABELS: Record<Payment["payment_type"], string> = {
+    reservation_deposit: t("reservationDeposit"),
+    security_deposit: t("securityDeposit"),
+    rent: t("rent"),
+    cleaning: t("cleaning"),
+    utilities: t("utilities"),
+    damage: t("damage"),
+    refund: t("refund"),
+    other: t("other"),
+  };
+
+  const PAYMENT_METHOD_LABELS: Record<Payment["method"], string> = {
+    cash: t("cash"),
+    card: t("card"),
+    transfer: t("transfer"),
+    paypal: t("paypal"),
+    stripe: t("stripe"),
+    other: t("other"),
+  };
+
   if (payments.length === 0) {
     return (
       <div className="text-center py-8">
@@ -49,11 +55,8 @@ export function PaymentList({ payments, onDeletePayment }: PaymentListProps) {
           />
         </svg>
         <h3 className="mt-2 text-sm font-medium text-zinc-400">
-          No hay pagos registrados
+          {t("noPayments")}
         </h3>
-        <p className="mt-1 text-sm text-zinc-500">
-          Comienza agregando un pago para esta reservación.
-        </p>
       </div>
     );
   }
@@ -128,7 +131,9 @@ export function PaymentList({ payments, onDeletePayment }: PaymentListProps) {
                         d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"
                       />
                     </svg>
-                    <span className="text-zinc-400">Ref: {payment.reference}</span>
+                    <span className="text-zinc-400">
+                      {t("reference")}: {payment.reference}
+                    </span>
                   </div>
                 )}
 
@@ -144,7 +149,7 @@ export function PaymentList({ payments, onDeletePayment }: PaymentListProps) {
               <button
                 onClick={() => onDeletePayment(payment.id)}
                 className="ml-2 p-1.5 text-zinc-500 hover:text-red-400 hover:bg-red-50/10 rounded transition-colors"
-                title="Eliminar pago"
+                title={tc("delete")}
               >
                 <svg
                   className="w-4 h-4"

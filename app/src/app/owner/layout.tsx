@@ -10,13 +10,16 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Building2, Calendar, FileText, DollarSign, Home } from "lucide-react";
 import { Avatar } from "@/components/ui";
+import { useTranslations } from "next-intl";
 
-const ownerNavItems = [
-  { id: "dashboard", label: "Dashboard", href: "/owner/dashboard", icon: Home },
-  { id: "properties", label: "Properties", href: "/owner/properties", icon: Building2 },
-  { id: "bookings", label: "Bookings", href: "/owner/bookings", icon: Calendar },
-  { id: "financials", label: "Financials", href: "/owner/financials", icon: DollarSign },
-  { id: "documents", label: "Documents", href: "/owner/documents", icon: FileText },
+type NavItemId = "dashboard" | "properties" | "bookings" | "financials" | "documents";
+
+const ownerNavItems: { id: NavItemId; href: string; icon: typeof Home }[] = [
+  { id: "dashboard", href: "/owner/dashboard", icon: Home },
+  { id: "properties", href: "/owner/properties", icon: Building2 },
+  { id: "bookings", href: "/owner/bookings", icon: Calendar },
+  { id: "financials", href: "/owner/financials", icon: DollarSign },
+  { id: "documents", href: "/owner/documents", icon: FileText },
 ];
 
 export default function OwnerLayout({
@@ -25,6 +28,7 @@ export default function OwnerLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+  const t = useTranslations("ownerPortal");
 
   return (
     <div className="min-h-screen bg-charcoal-950">
@@ -41,7 +45,7 @@ export default function OwnerLayout({
                 NILA
               </span>
               <span className="text-sm text-zinc-500 hidden sm:inline">
-                Owner Portal
+                {t("title")}
               </span>
             </Link>
 
@@ -63,7 +67,7 @@ export default function OwnerLayout({
                     )}
                   >
                     <Icon className="w-4 h-4" />
-                    <span>{item.label}</span>
+                    <span>{t(`nav.${item.id}`)}</span>
                   </Link>
                 );
               })}
@@ -104,7 +108,7 @@ export default function OwnerLayout({
                 )}
               >
                 <Icon className="w-4 h-4" />
-                <span>{item.label}</span>
+                <span>{t(`nav.${item.id}`)}</span>
               </Link>
             );
           })}

@@ -7,6 +7,7 @@
 
 import React, { useState, useMemo } from "react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { UnitStatus, UnitType } from "@/types";
 import { getUnits, getUnitStats } from "@/lib/db/units";
 import { UnitFilters } from "@/components/admin/units/unit-filters";
@@ -17,6 +18,10 @@ import { Button } from "@/components/ui/button";
 type ViewMode = "grid" | "list";
 
 export default function UnitsPage() {
+  const t = useTranslations("units");
+  const tCommon = useTranslations("common");
+  const tReports = useTranslations("reports");
+
   const [viewMode, setViewMode] = useState<ViewMode>("grid");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedStatus, setSelectedStatus] = useState<UnitStatus | "all">("all");
@@ -41,9 +46,9 @@ export default function UnitsPage() {
       <div className="mb-8">
         <div className="flex items-center justify-between mb-2">
           <div>
-            <h1 className="text-3xl font-bold text-white">Units</h1>
+            <h1 className="text-3xl font-bold text-white">{t("title")}</h1>
             <p className="text-gray-400 mt-1">
-              Manage your properties and vacation rentals
+              {t("manageProperties")}
             </p>
           </div>
           <Link href="/admin/units/new">
@@ -51,7 +56,7 @@ export default function UnitsPage() {
               <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
               </svg>
-              Add Unit
+              {t("addUnit")}
             </Button>
           </Link>
         </div>
@@ -60,23 +65,23 @@ export default function UnitsPage() {
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mt-6">
           <div className="bg-gray-800/50 border border-gray-700 rounded-lg p-4">
             <div className="text-2xl font-bold text-white">{stats.total}</div>
-            <div className="text-sm text-gray-400">Total Units</div>
+            <div className="text-sm text-gray-400">{t("totalUnits")}</div>
           </div>
           <div className="bg-gray-800/50 border border-green-500/20 rounded-lg p-4">
             <div className="text-2xl font-bold text-green-400">{stats.available}</div>
-            <div className="text-sm text-gray-400">Available</div>
+            <div className="text-sm text-gray-400">{t("available")}</div>
           </div>
           <div className="bg-gray-800/50 border border-orange-500/20 rounded-lg p-4">
             <div className="text-2xl font-bold text-orange-400">{stats.occupied}</div>
-            <div className="text-sm text-gray-400">Occupied</div>
+            <div className="text-sm text-gray-400">{t("occupied")}</div>
           </div>
           <div className="bg-gray-800/50 border border-red-500/20 rounded-lg p-4">
             <div className="text-2xl font-bold text-red-400">{stats.maintenance}</div>
-            <div className="text-sm text-gray-400">Maintenance</div>
+            <div className="text-sm text-gray-400">{t("maintenance")}</div>
           </div>
           <div className="bg-gray-800/50 border border-teal-500/20 rounded-lg p-4">
             <div className="text-2xl font-bold text-teal-400">{stats.occupancy_rate}%</div>
-            <div className="text-sm text-gray-400">Occupancy</div>
+            <div className="text-sm text-gray-400">{tReports("occupancy")}</div>
           </div>
         </div>
       </div>
@@ -97,8 +102,7 @@ export default function UnitsPage() {
       {/* View Toggle */}
       <div className="flex items-center justify-between mb-6">
         <div className="text-sm text-gray-400">
-          Showing <span className="font-medium text-white">{filteredUnits.length}</span> of{" "}
-          <span className="font-medium text-white">{allUnits.length}</span> units
+          {t("showingUnits", { filtered: filteredUnits.length, total: allUnits.length })}
         </div>
 
         <div className="flex items-center gap-2 bg-gray-800/50 border border-gray-700 rounded-lg p-1">

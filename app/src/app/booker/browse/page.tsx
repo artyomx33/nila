@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { getAllUnits } from "@/lib/db/units";
 import { isUnitAvailable } from "@/lib/db/bookings";
 import { formatCurrency } from "@/lib/utils";
@@ -9,6 +10,7 @@ import { Unit } from "@/types";
 
 export default function BrowseUnitsPage() {
   const router = useRouter();
+  const t = useTranslations("booker");
   const [checkIn, setCheckIn] = useState("");
   const [checkOut, setCheckOut] = useState("");
   const [guests, setGuests] = useState(2);
@@ -36,10 +38,10 @@ export default function BrowseUnitsPage() {
       {/* Hero Section */}
       <div className="text-center mb-8">
         <h1 className="text-4xl font-bold text-gray-900 mb-3">
-          Encuentra tu Escapada en Bacalar
+          {t("heroTitle")}
         </h1>
         <p className="text-lg text-gray-600">
-          Apartamentos y villas de lujo con vista a la Laguna de los 7 Colores
+          {t("heroSubtitle")}
         </p>
       </div>
 
@@ -48,7 +50,7 @@ export default function BrowseUnitsPage() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Llegada
+              {t("checkIn")}
             </label>
             <input
               type="date"
@@ -60,7 +62,7 @@ export default function BrowseUnitsPage() {
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Salida
+              {t("checkOut")}
             </label>
             <input
               type="date"
@@ -72,7 +74,7 @@ export default function BrowseUnitsPage() {
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Huéspedes
+              {t("guests")}
             </label>
             <select
               value={guests}
@@ -81,7 +83,7 @@ export default function BrowseUnitsPage() {
             >
               {[1, 2, 3, 4, 5, 6, 7, 8].map((num) => (
                 <option key={num} value={num}>
-                  {num} {num === 1 ? "huésped" : "huéspedes"}
+                  {num} {num === 1 ? t("guestSingular") : t("guestPlural")}
                 </option>
               ))}
             </select>
@@ -93,15 +95,13 @@ export default function BrowseUnitsPage() {
               }}
               className="w-full px-6 py-2 bg-teal-500 text-white font-medium rounded-lg hover:bg-teal-600 transition-colors"
             >
-              Buscar
+              {t("search")}
             </button>
           </div>
         </div>
         {checkIn && checkOut && (
           <div className="mt-4 pt-4 border-t border-gray-200 text-sm text-gray-600">
-            {availableUnits.length} unidad
-            {availableUnits.length !== 1 ? "es" : ""} disponible
-            {availableUnits.length !== 1 ? "s" : ""} para las fechas seleccionadas
+            {t("unitsAvailable", { count: availableUnits.length })}
           </div>
         )}
       </div>
@@ -109,7 +109,7 @@ export default function BrowseUnitsPage() {
       {/* Results */}
       <div>
         <h2 className="text-2xl font-bold text-gray-900 mb-4">
-          {checkIn && checkOut ? "Unidades Disponibles" : "Todas las Unidades"}
+          {checkIn && checkOut ? t("availableUnits") : t("allUnits")}
         </h2>
 
         {availableUnits.length === 0 ? (
@@ -130,10 +130,10 @@ export default function BrowseUnitsPage() {
               </svg>
             </div>
             <h3 className="text-xl font-semibold text-gray-900 mb-2">
-              No hay unidades disponibles
+              {t("noUnitsAvailable")}
             </h3>
             <p className="text-gray-600">
-              Intenta cambiar tus fechas para ver más opciones
+              {t("tryDifferentDates")}
             </p>
           </div>
         ) : (
@@ -153,6 +153,8 @@ export default function BrowseUnitsPage() {
 }
 
 function UnitCard({ unit, onSelect }: { unit: Unit; onSelect: () => void }) {
+  const t = useTranslations("booker");
+
   return (
     <div className="bg-white rounded-lg border border-gray-200 overflow-hidden hover:shadow-xl transition-shadow">
       {/* Image */}
@@ -160,7 +162,7 @@ function UnitCard({ unit, onSelect }: { unit: Unit; onSelect: () => void }) {
         <div className="text-center">
           <div className="text-4xl mb-2">🏠</div>
           <div className="text-sm text-gray-600">
-            {unit.photos.length > 0 ? "Foto disponible" : "Sin foto"}
+            {unit.photos.length > 0 ? t("photoAvailable") : t("noPhoto")}
           </div>
         </div>
       </div>
@@ -193,7 +195,7 @@ function UnitCard({ unit, onSelect }: { unit: Unit; onSelect: () => void }) {
                 d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
               />
             </svg>
-            {unit.bedrooms} rec
+            {unit.bedrooms} {t("bedrooms")}
           </div>
           <div className="flex items-center">
             <svg
@@ -209,7 +211,7 @@ function UnitCard({ unit, onSelect }: { unit: Unit; onSelect: () => void }) {
                 d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
               />
             </svg>
-            {unit.bathrooms} baños
+            {unit.bathrooms} {t("bathrooms")}
           </div>
         </div>
 
@@ -225,7 +227,7 @@ function UnitCard({ unit, onSelect }: { unit: Unit; onSelect: () => void }) {
           ))}
           {unit.amenities.length > 3 && (
             <span className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded">
-              +{unit.amenities.length - 3} más
+              {t("more", { count: unit.amenities.length - 3 })}
             </span>
           )}
         </div>
@@ -233,17 +235,17 @@ function UnitCard({ unit, onSelect }: { unit: Unit; onSelect: () => void }) {
         {/* Price and CTA */}
         <div className="flex items-center justify-between pt-4 border-t border-gray-200">
           <div>
-            <div className="text-xs text-gray-500">Desde</div>
+            <div className="text-xs text-gray-500">{t("from")}</div>
             <div className="text-xl font-bold text-gray-900">
               {formatCurrency(unit.pricing.base, unit.pricing.currency)}
-              <span className="text-sm font-normal text-gray-600">/noche</span>
+              <span className="text-sm font-normal text-gray-600">{t("perNight")}</span>
             </div>
           </div>
           <button
             onClick={onSelect}
             className="px-4 py-2 bg-teal-500 text-white text-sm font-medium rounded-lg hover:bg-teal-600 transition-colors"
           >
-            Reservar
+            {t("book")}
           </button>
         </div>
       </div>

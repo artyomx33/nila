@@ -6,6 +6,18 @@
 export { supabase, isSupabaseConfigured } from './client';
 export * from './queries';
 export type { Database } from './types';
+
+// Booking Confirmation Logic
+export {
+  checkBookingConfirmationRequirements,
+  checkPaymentRequirements,
+  checkDocumentRequirements,
+  checkContractRequirements,
+  shouldAutoConfirmBooking,
+  getBookingConfirmationStatusMessage,
+  calculateBookingConfirmationProgress,
+  type BookingConfirmationRequirements,
+} from './booking-confirmation';
 export type {
   // Row types
   NilaOwner,

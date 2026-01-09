@@ -1,5 +1,236 @@
 @import "tailwindcss";
 
+/* ============================================
+   NILA Website - Global Styles
+   Tropical Dark Luxury Theme
+   ============================================ */
+
+/* Noise texture overlay - add to body or sections */
+@layer utilities {
+  .bg-noise {
+    position: relative;
+  }
+
+  .bg-noise::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    opacity: 0.02;
+    pointer-events: none;
+    z-index: 1;
+  }
+}
+
+/* ============================================
+   Gradient Mesh Backgrounds
+   ============================================ */
+@layer utilities {
+  /* Teal mesh - primary hero background */
+  .bg-mesh-teal {
+    background:
+      radial-gradient(ellipse 80% 50% at 20% 40%, rgba(13, 148, 136, 0.15) 0%, transparent 50%),
+      radial-gradient(ellipse 60% 40% at 80% 60%, rgba(45, 212, 191, 0.1) 0%, transparent 50%),
+      radial-gradient(ellipse 40% 30% at 40% 80%, rgba(20, 184, 166, 0.08) 0%, transparent 50%);
+  }
+
+  /* Gold accent mesh */
+  .bg-mesh-gold {
+    background:
+      radial-gradient(ellipse 60% 40% at 70% 30%, rgba(245, 158, 11, 0.12) 0%, transparent 50%),
+      radial-gradient(ellipse 50% 50% at 30% 70%, rgba(251, 191, 36, 0.08) 0%, transparent 50%);
+  }
+
+  /* Combined teal + gold (for hero) */
+  .bg-mesh-hero {
+    background:
+      radial-gradient(ellipse 80% 50% at 20% 30%, rgba(13, 148, 136, 0.2) 0%, transparent 50%),
+      radial-gradient(ellipse 50% 40% at 85% 20%, rgba(245, 158, 11, 0.1) 0%, transparent 50%),
+      radial-gradient(ellipse 60% 50% at 60% 80%, rgba(45, 212, 191, 0.08) 0%, transparent 50%);
+  }
+
+  /* Sunset gradient (for contact/CTA) */
+  .bg-mesh-sunset {
+    background:
+      radial-gradient(ellipse 70% 50% at 30% 30%, rgba(249, 115, 22, 0.15) 0%, transparent 50%),
+      radial-gradient(ellipse 60% 40% at 70% 70%, rgba(245, 158, 11, 0.12) 0%, transparent 50%),
+      radial-gradient(ellipse 50% 30% at 50% 50%, rgba(217, 119, 6, 0.08) 0%, transparent 50%);
+  }
+}
+
+/* ============================================
+   Glow Effects
+   ============================================ */
+@layer utilities {
+  .glow-teal {
+    box-shadow: 0 0 40px rgba(13, 148, 136, 0.15);
+  }
+
+  .glow-teal-strong {
+    box-shadow: 0 0 60px rgba(13, 148, 136, 0.25);
+  }
+
+  .glow-teal-subtle {
+    box-shadow: 0 0 20px rgba(13, 148, 136, 0.1);
+  }
+
+  .glow-gold {
+    box-shadow: 0 0 40px rgba(245, 158, 11, 0.15);
+  }
+
+  .glow-gold-strong {
+    box-shadow: 0 0 60px rgba(245, 158, 11, 0.25);
+  }
+
+  /* Border glow */
+  .glow-border-teal {
+    box-shadow:
+      0 0 0 1px rgba(13, 148, 136, 0.3),
+      0 0 20px rgba(13, 148, 136, 0.1);
+  }
+
+  /* Hover glow transition */
+  .hover-glow {
+    transition: box-shadow 0.3s ease, border-color 0.3s ease;
+  }
+
+  .hover-glow:hover {
+    box-shadow: 0 0 30px rgba(13, 148, 136, 0.2);
+    border-color: rgba(13, 148, 136, 0.5);
+  }
+}
+
+/* ============================================
+   Gradient Text
+   ============================================ */
+@layer utilities {
+  .text-gradient-teal {
+    background: linear-gradient(135deg, #2DD4BF 0%, #0D9488 50%, #0F766E 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .text-gradient-gold {
+    background: linear-gradient(135deg, #FBBF24 0%, #F59E0B 50%, #D97706 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .text-gradient-hero {
+    background: linear-gradient(135deg, #F0FDFA 0%, #2DD4BF 50%, #0D9488 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+}
+
+/* ============================================
+   Glass Morphism
+   ============================================ */
+@layer utilities {
+  .glass {
+    background-color: rgba(39, 39, 42, 0.5);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(63, 63, 68, 0.5);
+  }
+
+  .glass-subtle {
+    background-color: rgba(39, 39, 42, 0.3);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+
+  .glass-strong {
+    background-color: rgba(39, 39, 42, 0.7);
+    backdrop-filter: blur(32px);
+    -webkit-backdrop-filter: blur(32px);
+  }
+}
+
+/* ============================================
+   Animation Keyframes
+   ============================================ */
+@keyframes glow-pulse {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(13, 148, 136, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(13, 148, 136, 0.4);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes gradient-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@layer utilities {
+  .animate-glow-pulse {
+    animation: glow-pulse 3s ease-in-out infinite;
+  }
+
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  .animate-gradient-shift {
+    background-size: 200% 200%;
+    animation: gradient-shift 15s ease infinite;
+  }
+
+  .animate-fade-in-up {
+    animation: fade-in-up 0.6s ease-out forwards;
+  }
+
+  .animate-scale-in {
+    animation: scale-in 0.4s ease-out forwards;
+  }
+}
+
+/* ============================================
+   Component Classes
+   ============================================ */
 @layer components {
   .section-wrapper {
     @apply w-full overflow-hidden;
@@ -9,35 +240,93 @@
     @apply max-w-6xl mx-auto px-4 lg:px-8 py-12 lg:py-20;
   }
 
+  /* Updated buttons for dark theme */
   .button-primary {
-    @apply inline-flex items-center justify-center px-6 py-3 bg-black text-white text-sm font-medium rounded-[4px] shadow-sm transition-all duration-300 hover:shadow-lg;
+    @apply inline-flex items-center justify-center px-6 py-3
+           bg-nila-600 text-white text-sm font-medium rounded-lg
+           shadow-sm transition-all duration-300
+           hover:bg-nila-700 hover:shadow-lg hover:shadow-nila-600/20;
   }
 
   .button-secondary {
-    @apply inline-flex items-center justify-center px-6 py-3 bg-transparent border-2 border-black text-black text-sm font-medium rounded-[4px] transition-all duration-300;
+    @apply inline-flex items-center justify-center px-6 py-3
+           bg-transparent border border-charcoal-700 text-charcoal-200
+           text-sm font-medium rounded-lg transition-all duration-300
+           hover:border-nila-600 hover:text-nila-400;
   }
 
+  .button-glow {
+    @apply inline-flex items-center justify-center px-6 py-3
+           bg-nila-600 text-white text-sm font-medium rounded-lg
+           transition-all duration-300
+           hover:bg-nila-700 animate-glow-pulse;
+  }
+
+  /* Typography - updated for dark theme */
   .heading-xl {
-    @apply text-4xl lg:text-6xl font-bold leading-[120%];
+    @apply text-4xl lg:text-6xl font-bold leading-[110%] text-charcoal-50;
   }
 
   .heading-lg {
-    @apply text-3xl lg:text-4xl font-bold leading-[120%];
+    @apply text-3xl lg:text-4xl font-bold leading-[120%] text-charcoal-50;
   }
 
   .heading-md {
-    @apply text-2xl lg:text-3xl font-semibold leading-[120%];
+    @apply text-2xl lg:text-3xl font-semibold leading-[120%] text-charcoal-100;
   }
 
   .subtext-md {
-    @apply text-lg lg:text-xl text-gray-700 leading-relaxed;
+    @apply text-lg lg:text-xl text-charcoal-400 leading-relaxed;
+  }
+
+  .subtext-sm {
+    @apply text-base text-charcoal-500 leading-relaxed;
+  }
+
+  /* Cards - updated for dark theme */
+  .card-glass {
+    @apply backdrop-blur-sm bg-charcoal-900/40 border border-charcoal-800/50
+           rounded-xl p-6 transition-all duration-300;
+  }
+
+  .card-glass-hover {
+    @apply card-glass hover:bg-charcoal-900/60 hover:border-nila-600/30
+           hover:shadow-glow hover:-translate-y-1;
   }
 
   .card-service {
-    @apply bg-white border border-gray-200 rounded-[8px] p-6 hover:shadow-lg transition-shadow duration-300;
+    @apply bg-charcoal-900/50 border border-charcoal-800/50 rounded-xl p-6
+           hover:shadow-lg hover:shadow-nila-600/10 transition-all duration-300;
   }
 
   .testimonial-card {
-    @apply bg-white border border-gray-200 rounded-[8px] p-6;
+    @apply bg-charcoal-900/40 border border-charcoal-800/50 rounded-xl p-6;
+  }
+}
+
+/* ============================================
+   Custom Scrollbar (optional)
+   ============================================ */
+@layer utilities {
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(13, 148, 136, 0.3) transparent;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background-color: rgba(13, 148, 136, 0.3);
+    border-radius: 3px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(13, 148, 136, 0.5);
   }
 }

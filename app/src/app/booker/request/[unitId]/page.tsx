@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { getUnitById } from "@/lib/db/units";
 import { createBooking } from "@/lib/db/bookings";
 import { formatCurrency, calculateNights } from "@/lib/utils";
@@ -13,6 +14,7 @@ export default function BookingRequestPage({
 }) {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const t = useTranslations("booker");
   const unit = getUnitById(params.unitId);
 
   // Get params from URL
@@ -35,13 +37,13 @@ export default function BookingRequestPage({
     return (
       <div className="text-center py-12">
         <h2 className="text-2xl font-bold text-gray-900 mb-4">
-          Unidad no encontrada
+          {t("unitNotFound")}
         </h2>
         <button
           onClick={() => router.push("/booker/browse")}
           className="px-6 py-2 bg-teal-500 text-white rounded-lg hover:bg-teal-600"
         >
-          Volver a buscar
+          {t("backToSearch")}
         </button>
       </div>
     );
@@ -91,7 +93,7 @@ export default function BookingRequestPage({
       router.push(`/booker/confirmation?bookingId=${booking.id}`);
     } catch (error) {
       console.error("Error creating booking:", error);
-      alert("Hubo un error al crear la reservación. Por favor intenta de nuevo.");
+      alert(t("errorCreatingBooking"));
       setIsSubmitting(false);
     }
   };
@@ -124,7 +126,7 @@ export default function BookingRequestPage({
             d="M15 19l-7-7 7-7"
           />
         </svg>
-        Volver a buscar
+        {t("backToSearch")}
       </button>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -132,22 +134,22 @@ export default function BookingRequestPage({
         <div className="lg:col-span-2">
           <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-8">
             <h1 className="text-2xl font-bold text-gray-900 mb-2">
-              Solicita tu Reservación
+              {t("requestBooking")}
             </h1>
             <p className="text-gray-600 mb-6">
-              Completa tus datos para solicitar la reservación de {unit.name}
+              {t("completeDetails", { unitName: unit.name })}
             </p>
 
             <form onSubmit={handleSubmit} className="space-y-6">
               {/* Guest Information */}
               <div>
                 <h2 className="text-lg font-semibold text-gray-900 mb-4">
-                  Información del Huésped
+                  {t("guestInformation")}
                 </h2>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="col-span-2">
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Nombre completo *
+                      {t("fullName")} *
                     </label>
                     <input
                       type="text"
@@ -155,12 +157,12 @@ export default function BookingRequestPage({
                       onChange={(e) => setGuestName(e.target.value)}
                       required
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
-                      placeholder="Juan Pérez"
+                      placeholder={t("fullNamePlaceholder")}
                     />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Email *
+                      {t("email")} *
                     </label>
                     <input
                       type="email"
@@ -168,12 +170,12 @@ export default function BookingRequestPage({
                       onChange={(e) => setGuestEmail(e.target.value)}
                       required
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
-                      placeholder="juan@ejemplo.com"
+                      placeholder={t("emailPlaceholder")}
                     />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Teléfono *
+                      {t("phone")} *
                     </label>
                     <input
                       type="tel"
@@ -181,12 +183,12 @@ export default function BookingRequestPage({
                       onChange={(e) => setGuestPhone(e.target.value)}
                       required
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
-                      placeholder="+52 998 123 4567"
+                      placeholder={t("phonePlaceholder")}
                     />
                   </div>
                   <div className="col-span-2">
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Nacionalidad *
+                      {t("nationality")} *
                     </label>
                     <input
                       type="text"
@@ -194,7 +196,7 @@ export default function BookingRequestPage({
                       onChange={(e) => setGuestNationality(e.target.value)}
                       required
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
-                      placeholder="México"
+                      placeholder={t("nationalityPlaceholder")}
                     />
                   </div>
                 </div>
@@ -203,12 +205,12 @@ export default function BookingRequestPage({
               {/* Stay Details */}
               <div className="pt-6 border-t border-gray-200">
                 <h2 className="text-lg font-semibold text-gray-900 mb-4">
-                  Detalles de la Estadía
+                  {t("stayDetails")}
                 </h2>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Llegada *
+                      {t("checkIn")} *
                     </label>
                     <input
                       type="date"
@@ -221,7 +223,7 @@ export default function BookingRequestPage({
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Salida *
+                      {t("checkOut")} *
                     </label>
                     <input
                       type="date"
@@ -234,7 +236,7 @@ export default function BookingRequestPage({
                   </div>
                   <div className="col-span-2">
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Número de huéspedes *
+                      {t("numberOfGuests")} *
                     </label>
                     <select
                       value={guests}
@@ -244,7 +246,7 @@ export default function BookingRequestPage({
                     >
                       {[1, 2, 3, 4, 5, 6, 7, 8].map((num) => (
                         <option key={num} value={num}>
-                          {num} {num === 1 ? "huésped" : "huéspedes"}
+                          {num} {num === 1 ? t("guestSingular") : t("guestPlural")}
                         </option>
                       ))}
                     </select>
@@ -255,14 +257,14 @@ export default function BookingRequestPage({
               {/* Additional Notes */}
               <div className="pt-6 border-t border-gray-200">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Notas adicionales (opcional)
+                  {t("additionalNotes")}
                 </label>
                 <textarea
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
                   rows={3}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
-                  placeholder="Alguna petición especial o información adicional..."
+                  placeholder={t("additionalNotesPlaceholder")}
                 />
               </div>
 
@@ -277,7 +279,7 @@ export default function BookingRequestPage({
                       : "bg-teal-500 hover:bg-teal-600"
                   }`}
                 >
-                  {isSubmitting ? "Enviando..." : "Solicitar Reservación"}
+                  {isSubmitting ? t("submitting") : t("submitRequest")}
                 </button>
               </div>
             </form>
@@ -288,7 +290,7 @@ export default function BookingRequestPage({
         <div>
           <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6 sticky top-6">
             <h2 className="text-lg font-semibold text-gray-900 mb-4">
-              Resumen de Reservación
+              {t("bookingSummary")}
             </h2>
 
             {/* Unit Info */}
@@ -299,9 +301,9 @@ export default function BookingRequestPage({
               <h3 className="font-semibold text-gray-900">{unit.name}</h3>
               <p className="text-sm text-gray-600 capitalize">{unit.type}</p>
               <div className="flex items-center gap-3 mt-2 text-sm text-gray-600">
-                <span>{unit.bedrooms} rec</span>
+                <span>{unit.bedrooms} {t("bedrooms")}</span>
                 <span>•</span>
-                <span>{unit.bathrooms} baños</span>
+                <span>{unit.bathrooms} {t("bathrooms")}</span>
               </div>
             </div>
 
@@ -310,19 +312,19 @@ export default function BookingRequestPage({
               <>
                 <div className="mb-4 pb-4 border-b border-gray-200 text-sm">
                   <div className="flex justify-between mb-2">
-                    <span className="text-gray-600">Llegada</span>
+                    <span className="text-gray-600">{t("checkIn")}</span>
                     <span className="text-gray-900 font-medium">
                       {new Date(checkIn).toLocaleDateString("es-MX")}
                     </span>
                   </div>
                   <div className="flex justify-between mb-2">
-                    <span className="text-gray-600">Salida</span>
+                    <span className="text-gray-600">{t("checkOut")}</span>
                     <span className="text-gray-900 font-medium">
                       {new Date(checkOut).toLocaleDateString("es-MX")}
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Huéspedes</span>
+                    <span className="text-gray-600">{t("guests")}</span>
                     <span className="text-gray-900 font-medium">{guests}</span>
                   </div>
                 </div>
@@ -331,7 +333,7 @@ export default function BookingRequestPage({
                 <div className="mb-4 space-y-2 text-sm">
                   <div className="flex justify-between">
                     <span className="text-gray-600">
-                      {nights} {nights === 1 ? "noche" : "noches"} ×{" "}
+                      {nights} {nights === 1 ? t("nightSingular") : t("nightPlural")} ×{" "}
                       {formatCurrency(nightlyRate, unit.pricing.currency)}
                     </span>
                     <span className="text-gray-900">
@@ -339,13 +341,13 @@ export default function BookingRequestPage({
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Tarifa de limpieza</span>
+                    <span className="text-gray-600">{t("cleaningFee")}</span>
                     <span className="text-gray-900">
                       {formatCurrency(cleaningFee, unit.pricing.currency)}
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Impuestos (16%)</span>
+                    <span className="text-gray-600">{t("taxes")}</span>
                     <span className="text-gray-900">
                       {formatCurrency(taxes, unit.pricing.currency)}
                     </span>
@@ -355,7 +357,7 @@ export default function BookingRequestPage({
                 <div className="pt-4 border-t border-gray-200">
                   <div className="flex justify-between items-center">
                     <span className="text-lg font-semibold text-gray-900">
-                      Total
+                      {t("total")}
                     </span>
                     <span className="text-2xl font-bold text-teal-600">
                       {formatCurrency(total, unit.pricing.currency)}

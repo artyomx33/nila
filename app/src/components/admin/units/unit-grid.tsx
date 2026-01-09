@@ -6,6 +6,7 @@
 "use client";
 
 import React from "react";
+import { useTranslations } from "next-intl";
 import { Unit } from "@/types";
 import { UnitCard } from "./unit-card";
 
@@ -14,6 +15,8 @@ interface UnitGridProps {
 }
 
 export function UnitGrid({ units }: UnitGridProps) {
+  const t = useTranslations("units");
+
   if (units.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-16 text-center">
@@ -30,9 +33,9 @@ export function UnitGrid({ units }: UnitGridProps) {
             d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
           />
         </svg>
-        <h3 className="text-lg font-semibold text-white mb-2">No units found</h3>
+        <h3 className="text-lg font-semibold text-white mb-2">{t("noUnits")}</h3>
         <p className="text-gray-400 max-w-md">
-          No units match your current filters. Try adjusting your search criteria or create a new unit.
+          {t("noUnitsDescription")}
         </p>
       </div>
     );

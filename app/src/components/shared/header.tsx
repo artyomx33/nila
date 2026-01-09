@@ -8,6 +8,8 @@
 import { Search, Bell, Menu } from "lucide-react";
 import { Avatar, Button } from "@/components/ui";
 import { useUIStore } from "@/lib/stores";
+import { useTranslations } from "next-intl";
+import { LanguageToggle } from "@/components/ui/language-toggle";
 
 interface HeaderProps {
   title?: string;
@@ -16,6 +18,7 @@ interface HeaderProps {
 
 export default function Header({ title, showSearch = true }: HeaderProps) {
   const { toggleSidebar } = useUIStore();
+  const t = useTranslations("header");
 
   return (
     <header className="sticky top-0 z-20 glass-strong border-b border-charcoal-800">
@@ -40,15 +43,18 @@ export default function Header({ title, showSearch = true }: HeaderProps) {
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
               <input
                 type="text"
-                placeholder="Search units, bookings, guests..."
+                placeholder={t("searchPlaceholder")}
                 className="input-themed w-full pl-10 pr-4 py-2 rounded-lg text-sm"
               />
             </div>
           </div>
         )}
 
-        {/* Right: Notifications + User */}
+        {/* Right: Language + Notifications + User */}
         <div className="flex items-center gap-3">
+          {/* Language Toggle */}
+          <LanguageToggle />
+
           {/* Notifications */}
           <button className="relative p-2 rounded-lg text-zinc-400 hover:text-white hover:bg-charcoal-800 transition-colors">
             <Bell className="w-5 h-5" />
@@ -58,11 +64,11 @@ export default function Header({ title, showSearch = true }: HeaderProps) {
           {/* User Menu */}
           <div className="flex items-center gap-3 pl-3 border-l border-charcoal-800">
             <div className="hidden sm:block text-right">
-              <p className="text-sm font-medium text-white">Admin User</p>
+              <p className="text-sm font-medium text-white">{t("adminUser")}</p>
               <p className="text-xs text-zinc-500">admin@nila.com</p>
             </div>
             <Avatar
-              name="Admin User"
+              name={t("adminUser")}
               size="md"
               className="cursor-pointer hover:ring-2 hover:ring-teal-600/50 transition-all"
             />

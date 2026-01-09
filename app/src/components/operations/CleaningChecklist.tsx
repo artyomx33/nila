@@ -6,6 +6,7 @@
 
 import { useState } from "react";
 import { ChecklistItem } from "@/types";
+import { useTranslations } from "next-intl";
 
 interface CleaningChecklistProps {
   items: ChecklistItem[];
@@ -18,6 +19,8 @@ export function CleaningChecklist({
   onUpdate,
   readonly = false,
 }: CleaningChecklistProps) {
+  const t = useTranslations("operations");
+  const tCommon = useTranslations("common");
   const [checklistItems, setChecklistItems] = useState(items);
 
   const toggleItem = (itemId: string) => {
@@ -49,7 +52,7 @@ export function CleaningChecklist({
       {/* Progress bar */}
       <div className="card-default p-4">
         <div className="flex items-center justify-between mb-2">
-          <h3 className="text-lg font-semibold text-white">Checklist Progress</h3>
+          <h3 className="text-lg font-semibold text-white">{t("cleaningChecklist")}</h3>
           <span className="text-2xl font-bold text-teal-400">{progress}%</span>
         </div>
         <div className="w-full bg-gray-700 rounded-full h-3">
@@ -59,7 +62,7 @@ export function CleaningChecklist({
           />
         </div>
         <div className="text-sm text-gray-400 mt-2">
-          {completedCount} of {totalCount} items completed
+          {completedCount} / {totalCount} {t("completed")}
         </div>
       </div>
 
@@ -158,9 +161,9 @@ export function CleaningChecklist({
                 d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"
               />
             </svg>
-            <p className="text-sm">Upload photos for documentation</p>
+            <p className="text-sm">{t("photos")}</p>
             <button className="mt-2 px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-lg text-sm text-white transition-colors">
-              Choose Files
+              {t("uploadPhotos")}
             </button>
           </div>
         </div>

@@ -9,6 +9,7 @@ import { getCleaner } from "@/lib/db/cleaners";
 import { getCleaningsByCleaner } from "@/lib/db/cleanings";
 import { CleaningCard } from "@/components/operations/CleaningCard";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 export default function StaffProfilePage({
   params,
@@ -16,6 +17,9 @@ export default function StaffProfilePage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = use(params);
+  const t = useTranslations("operations");
+  const tCommon = useTranslations("common");
+
   const cleaner = getCleaner(id);
   const cleanings = getCleaningsByCleaner(id);
 
@@ -23,15 +27,15 @@ export default function StaffProfilePage({
     return (
       <div className="card-default p-12 text-center">
         <div className="text-6xl mb-4">❌</div>
-        <h2 className="text-2xl font-bold text-white mb-2">Staff Not Found</h2>
+        <h2 className="text-2xl font-bold text-white mb-2">{t("staffNotFound")}</h2>
         <p className="text-gray-400 mb-6">
-          The staff member you're looking for doesn't exist.
+          {t("staffNotFoundDesc")}
         </p>
         <Link
           href="/admin/operations/staff"
           className="btn-primary px-6 py-3 rounded-lg inline-block"
         >
-          Back to Staff
+          {t("backToStaff")}
         </Link>
       </div>
     );
@@ -44,10 +48,10 @@ export default function StaffProfilePage({
     .toUpperCase()
     .slice(0, 2);
 
-  const statusConfig = {
-    active: { label: "Active", className: "badge-success", icon: "✅" },
-    inactive: { label: "Inactive", className: "badge-muted", icon: "⏸️" },
-    on_leave: { label: "On Leave", className: "badge-warning", icon: "🏖️" },
+  const statusConfig: Record<string, { label: string; className: string; icon: string }> = {
+    active: { label: t("active"), className: "badge-success", icon: "✅" },
+    inactive: { label: t("inactive"), className: "badge-muted", icon: "⏸️" },
+    on_leave: { label: t("onLeave"), className: "badge-warning", icon: "🏖️" },
   };
 
   const statusInfo = statusConfig[cleaner.status];
@@ -73,7 +77,7 @@ export default function StaffProfilePage({
           href="/admin/operations/staff"
           className="text-sm text-teal-400 hover:text-teal-300 mb-2 inline-block"
         >
-          ← Back to Staff
+          ← {t("backToStaff")}
         </Link>
       </div>
 
@@ -109,7 +113,7 @@ export default function StaffProfilePage({
 
               <div className="flex gap-2">
                 <button className="btn-secondary px-4 py-2 rounded-lg text-sm">
-                  Edit Profile
+                  {t("editProfile")}
                 </button>
                 <button className="btn-ghost px-4 py-2 rounded-lg text-sm">
                   •••
@@ -126,7 +130,7 @@ export default function StaffProfilePage({
                   </svg>
                 </div>
                 <div>
-                  <div className="text-xs text-gray-400">Phone</div>
+                  <div className="text-xs text-gray-400">{t("phone")}</div>
                   <div className="text-white font-medium">{cleaner.phone}</div>
                 </div>
               </div>
@@ -139,7 +143,7 @@ export default function StaffProfilePage({
                     </svg>
                   </div>
                   <div>
-                    <div className="text-xs text-gray-400">Email</div>
+                    <div className="text-xs text-gray-400">{t("email")}</div>
                     <div className="text-white font-medium">{cleaner.email}</div>
                   </div>
                 </div>
@@ -152,28 +156,28 @@ export default function StaffProfilePage({
       {/* Stats Grid */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         <div className="card-default p-4">
-          <div className="text-sm text-gray-400 mb-1">Active Assignments</div>
+          <div className="text-sm text-gray-400 mb-1">{t("activeAssignments")}</div>
           <div className="text-3xl font-bold text-amber-400">
             {cleaner.assigned_cleanings || 0}
           </div>
         </div>
 
         <div className="card-default p-4">
-          <div className="text-sm text-gray-400 mb-1">Completed</div>
+          <div className="text-sm text-gray-400 mb-1">{t("completed")}</div>
           <div className="text-3xl font-bold text-teal-400">
             {cleaner.completed_cleanings || 0}
           </div>
         </div>
 
         <div className="card-default p-4">
-          <div className="text-sm text-gray-400 mb-1">Rating</div>
+          <div className="text-sm text-gray-400 mb-1">{t("rating")}</div>
           <div className="text-3xl font-bold text-gold-400">
             {cleaner.rating || "N/A"}
           </div>
         </div>
 
         <div className="card-default p-4">
-          <div className="text-sm text-gray-400 mb-1">Member Since</div>
+          <div className="text-sm text-gray-400 mb-1">{t("memberSince")}</div>
           <div className="text-lg font-bold text-white">
             {new Date(cleaner.created_at).toLocaleDateString("en-US", {
               month: "short",
@@ -187,14 +191,14 @@ export default function StaffProfilePage({
       {currentAssignments.length > 0 && (
         <div>
           <h2 className="text-xl font-semibold text-white mb-4">
-            Current Assignments ({currentAssignments.length})
+            {t("currentAssignments")} ({currentAssignments.length})
           </h2>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             {currentAssignments.map((cleaning) => (
               <CleaningCard
                 key={cleaning.id}
                 cleaning={cleaning}
-                unitName={`Unit ${cleaning.unit_id.split("-")[1]}`}
+                unitName={`${t("unit")} ${cleaning.unit_id.split("-")[1]}`}
                 cleanerName={cleaner.name}
               />
             ))}
@@ -207,13 +211,13 @@ export default function StaffProfilePage({
         <div>
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-xl font-semibold text-white">
-              Recent Completed Cleanings
+              {t("recentCompletedCleanings")}
             </h2>
             <Link
               href={`/admin/operations/cleaning?cleaner=${id}`}
               className="text-sm text-teal-400 hover:text-teal-300"
             >
-              View all →
+              {t("viewAll")} →
             </Link>
           </div>
           <div className="space-y-3">
@@ -221,7 +225,7 @@ export default function StaffProfilePage({
               <CleaningCard
                 key={cleaning.id}
                 cleaning={cleaning}
-                unitName={`Unit ${cleaning.unit_id.split("-")[1]}`}
+                unitName={`${t("unit")} ${cleaning.unit_id.split("-")[1]}`}
                 cleanerName={cleaner.name}
               />
             ))}
@@ -232,11 +236,11 @@ export default function StaffProfilePage({
       {/* Performance Placeholder */}
       <div className="card-default p-6">
         <h3 className="text-lg font-semibold text-white mb-4">
-          Performance Metrics
+          {t("performanceMetrics")}
         </h3>
         <div className="text-center py-8 text-gray-500">
           <div className="text-4xl mb-2">📊</div>
-          <p>Performance metrics coming soon</p>
+          <p>{t("performanceComingSoon")}</p>
         </div>
       </div>
     </div>

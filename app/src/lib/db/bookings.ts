@@ -511,7 +511,7 @@ export function updateContractStatus(
   id: string,
   status: "not_needed" | "draft" | "sent" | "signed"
 ): Booking | undefined {
-  const updates: Partial<Booking> = {
+  const updates: any = {
     contract_status: status,
   };
 
@@ -520,7 +520,7 @@ export function updateContractStatus(
     updates.contract_signed_at = new Date();
   }
 
-  return updateBooking(id, updates as any);
+  return updateBooking(id, updates);
 }
 
 /**

@@ -2,6 +2,7 @@
 
 import { use } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { getBookingById, updateContractStatus } from "@/lib/db/bookings";
 import { getUnitById } from "@/lib/db/units";
 import { ContractView } from "@/components/bookings/ContractView";
@@ -12,6 +13,8 @@ export default function ContractPage({
   params: Promise<{ id: string }>;
 }) {
   const router = useRouter();
+  const t = useTranslations("bookings");
+  const tContract = useTranslations("contract");
   const { id } = use(params);
   const booking = getBookingById(id);
 
@@ -20,16 +23,16 @@ export default function ContractPage({
       <div className="min-h-screen bg-charcoal-950 flex items-center justify-center">
         <div className="text-center">
           <h2 className="text-2xl font-bold text-white mb-2">
-            Booking Not Found
+            {t("bookingNotFound")}
           </h2>
           <p className="text-zinc-500 mb-4">
-            The booking you are looking for does not exist.
+            {t("bookingNotFoundDescription")}
           </p>
           <button
             onClick={() => router.push("/admin/bookings")}
             className="px-4 py-2 bg-teal-500 text-white rounded-lg hover:bg-teal-600"
           >
-            Back to Bookings
+            {t("backToBookings")}
           </button>
         </div>
       </div>
@@ -43,16 +46,16 @@ export default function ContractPage({
       <div className="min-h-screen bg-charcoal-950 flex items-center justify-center">
         <div className="text-center">
           <h2 className="text-2xl font-bold text-white mb-2">
-            Unit Not Found
+            {t("unitNotFound")}
           </h2>
           <p className="text-zinc-500 mb-4">
-            The unit for this booking could not be found.
+            {t("unitNotFoundDescription")}
           </p>
           <button
             onClick={() => router.push("/admin/bookings")}
             className="px-4 py-2 bg-teal-500 text-white rounded-lg hover:bg-teal-600"
           >
-            Back to Bookings
+            {t("backToBookings")}
           </button>
         </div>
       </div>
@@ -67,16 +70,16 @@ export default function ContractPage({
       <div className="min-h-screen bg-charcoal-950 flex items-center justify-center">
         <div className="text-center">
           <h2 className="text-2xl font-bold text-white mb-2">
-            Contract Not Available
+            {t("contractNotAvailable")}
           </h2>
           <p className="text-zinc-500 mb-4">
-            Contracts are only available for long-term bookings.
+            {t("contractNotAvailableDescription")}
           </p>
           <button
             onClick={() => router.push(`/admin/bookings/${id}`)}
             className="px-4 py-2 bg-teal-500 text-white rounded-lg hover:bg-teal-600"
           >
-            Back to Booking
+            {t("backToBooking")}
           </button>
         </div>
       </div>
@@ -114,7 +117,7 @@ export default function ContractPage({
               d="M15 19l-7-7 7-7"
             />
           </svg>
-          Back to Booking Details
+          {t("backToBookingDetails")}
         </button>
       </div>
 

@@ -7,6 +7,7 @@
 
 import React, { useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { Booking, BookingSource, PaymentStatus } from "@/types";
 import { useBookingsStore } from "@/lib/stores/bookings-store";
 import { useUnitsStore } from "@/lib/stores/units-store";
@@ -26,6 +27,10 @@ type BookingType = "short_term" | "long_term";
 
 export function BookingForm({ booking, mode, defaultUnitId }: BookingFormProps) {
   const router = useRouter();
+  const t = useTranslations("bookings");
+  const tCommon = useTranslations("common");
+  const tPayments = useTranslations("payments");
+  const tContract = useTranslations("contract");
   const { addBooking, updateBooking, isUnitAvailable } = useBookingsStore();
   const { getUnits } = useUnitsStore();
   const units = getUnits();
@@ -133,25 +138,25 @@ export function BookingForm({ booking, mode, defaultUnitId }: BookingFormProps) 
     const newErrors: Record<string, string> = {};
 
     if (!formData.unit_id) {
-      newErrors.unit_id = "Unit is required";
+      newErrors.unit_id = t("unit") + " is required";
     }
     if (!formData.guest_name.trim()) {
-      newErrors.guest_name = "Guest name is required";
+      newErrors.guest_name = t("guestName") + " is required";
     }
     if (!formData.guest_phone.trim()) {
-      newErrors.guest_phone = "Guest phone is required";
+      newErrors.guest_phone = t("guestPhone") + " is required";
     }
     if (!formData.check_in) {
-      newErrors.check_in = "Check-in date is required";
+      newErrors.check_in = t("checkIn") + " is required";
     }
     if (!formData.check_out) {
-      newErrors.check_out = "Check-out date is required";
+      newErrors.check_out = t("checkOut") + " is required";
     }
     if (formData.check_in && formData.check_out) {
       const checkIn = new Date(formData.check_in);
       const checkOut = new Date(formData.check_out);
       if (checkOut <= checkIn) {
-        newErrors.check_out = "Check-out must be after check-in";
+        newErrors.check_out = t("checkOut") + " must be after " + t("checkIn");
       }
     }
 
@@ -278,7 +283,7 @@ export function BookingForm({ booking, mode, defaultUnitId }: BookingFormProps) 
       {/* Booking Type Selection */}
       <Card>
         <CardHeader>
-          <CardTitle>Booking Type</CardTitle>
+          <CardTitle>{t("bookingType")}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex gap-4">
@@ -291,7 +296,7 @@ export function BookingForm({ booking, mode, defaultUnitId }: BookingFormProps) 
                   : "border-gray-700 bg-gray-800/30 text-gray-400 hover:border-gray-600"
               }`}
             >
-              <div className="text-lg font-medium mb-1">Short-Term</div>
+              <div className="text-lg font-medium mb-1">{t("shortTerm")}</div>
               <div className="text-sm opacity-70">
                 Nightly rates, vacation rentals
               </div>
@@ -305,9 +310,9 @@ export function BookingForm({ booking, mode, defaultUnitId }: BookingFormProps) 
                   : "border-gray-700 bg-gray-800/30 text-gray-400 hover:border-gray-600"
               }`}
             >
-              <div className="text-lg font-medium mb-1">Long-Term</div>
+              <div className="text-lg font-medium mb-1">{t("longTerm")}</div>
               <div className="text-sm opacity-70">
-                Monthly rates, contracts, deposits
+                {t("monthly")} rates, contracts, deposits
               </div>
             </button>
           </div>
@@ -317,19 +322,19 @@ export function BookingForm({ booking, mode, defaultUnitId }: BookingFormProps) 
       {/* Guest Information */}
       <Card>
         <CardHeader>
-          <CardTitle>Guest Information</CardTitle>
+          <CardTitle>{t("guestInfo")}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Input
-              label="Guest Name *"
+              label={`${t("guestName")} *`}
               value={formData.guest_name}
               onChange={(e) => handleInputChange("guest_name", e.target.value)}
               error={errors.guest_name}
               placeholder="Mela Copito"
             />
             <Input
-              label="Email"
+              label={t("guestEmail")}
               type="email"
               value={formData.guest_email}
               onChange={(e) => handleInputChange("guest_email", e.target.value)}
@@ -337,7 +342,7 @@ export function BookingForm({ booking, mode, defaultUnitId }: BookingFormProps) 
               placeholder="guest@example.com"
             />
             <Input
-              label="Phone *"
+              label={`${t("guestPhone")} *`}
               type="tel"
               value={formData.guest_phone}
               onChange={(e) => handleInputChange("guest_phone", e.target.value)}
@@ -345,7 +350,7 @@ export function BookingForm({ booking, mode, defaultUnitId }: BookingFormProps) 
               placeholder="+52 998 123 4567"
             />
             <Input
-              label="Nationality"
+              label={t("nationality")}
               value={formData.guest_nationality}
               onChange={(e) =>
                 handleInputChange("guest_nationality", e.target.value)
@@ -353,7 +358,7 @@ export function BookingForm({ booking, mode, defaultUnitId }: BookingFormProps) 
               placeholder="Mexican"
             />
             <Input
-              label="Number of Guests"
+              label={t("guestsCount")}
               type="number"
               value={formData.guest_count}
               onChange={(e) =>
@@ -365,7 +370,7 @@ export function BookingForm({ booking, mode, defaultUnitId }: BookingFormProps) 
           </div>
           <div className="mt-4">
             <label className="block text-sm font-medium text-gray-300 mb-2">
-              Guest Notes
+              {t("guestNotes")}
             </label>
             <textarea
               value={formData.guest_notes}
@@ -381,12 +386,12 @@ export function BookingForm({ booking, mode, defaultUnitId }: BookingFormProps) 
       {/* Booking Details */}
       <Card>
         <CardHeader>
-          <CardTitle>Booking Details</CardTitle>
+          <CardTitle>{t("bookingDetails")}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Select
-              label="Unit *"
+              label={`${t("unit")} *`}
               value={formData.unit_id}
               onChange={(e) => handleInputChange("unit_id", e.target.value)}
               error={errors.unit_id}
@@ -399,25 +404,25 @@ export function BookingForm({ booking, mode, defaultUnitId }: BookingFormProps) 
               ]}
             />
             <Select
-              label="Source"
+              label={t("source")}
               value={formData.source}
               onChange={(e) => handleInputChange("source", e.target.value)}
               options={[
-                { value: "direct", label: "Direct Booking" },
-                { value: "airbnb", label: "Airbnb" },
-                { value: "booking", label: "Booking.com" },
-                { value: "owner", label: "Owner" },
+                { value: "direct", label: t("direct") },
+                { value: "airbnb", label: t("airbnb") },
+                { value: "booking", label: t("bookingCom") },
+                { value: "owner", label: t("owner") },
               ]}
             />
             <Input
-              label="Check-in Date *"
+              label={`${t("checkIn")} *`}
               type="date"
               value={formData.check_in}
               onChange={(e) => handleInputChange("check_in", e.target.value)}
               error={errors.check_in}
             />
             <Input
-              label="Check-out Date *"
+              label={`${t("checkOut")} *`}
               type="date"
               value={formData.check_out}
               onChange={(e) => handleInputChange("check_out", e.target.value)}
@@ -431,7 +436,7 @@ export function BookingForm({ booking, mode, defaultUnitId }: BookingFormProps) 
       <Card>
         <CardHeader>
           <CardTitle>
-            {isLongTerm ? "Monthly Pricing" : "Nightly Pricing"}
+            {isLongTerm ? t("monthly") + " Pricing" : "Nightly Pricing"}
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -440,7 +445,7 @@ export function BookingForm({ booking, mode, defaultUnitId }: BookingFormProps) 
             <div className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <Input
-                  label="Monthly Rent (MXN) *"
+                  label={`${t("monthly")} Rent (MXN) *`}
                   type="number"
                   value={formData.monthly_rate}
                   onChange={(e) =>
@@ -452,7 +457,7 @@ export function BookingForm({ booking, mode, defaultUnitId }: BookingFormProps) 
                   placeholder="7500"
                 />
                 <Input
-                  label="Security Deposit (MXN)"
+                  label={`${tPayments("securityDeposit")} (MXN)`}
                   type="number"
                   value={formData.security_deposit}
                   onChange={(e) =>
@@ -524,7 +529,7 @@ export function BookingForm({ booking, mode, defaultUnitId }: BookingFormProps) 
                 step="0.01"
               />
               <Input
-                label="Cleaning Fee"
+                label={t("cleaningFee")}
                 type="number"
                 value={formData.cleaning_fee}
                 onChange={(e) =>
@@ -560,14 +565,14 @@ export function BookingForm({ booking, mode, defaultUnitId }: BookingFormProps) 
           {pricing && (
             <div className="mt-6 p-4 bg-gray-800/30 rounded-lg border border-gray-700">
               <h4 className="text-sm font-medium text-gray-400 mb-3">
-                Pricing Summary
+                {t("pricingBreakdown")}
               </h4>
               <div className="space-y-2 text-sm">
                 {pricing.type === "long_term" ? (
                   <>
                     <div className="flex justify-between text-gray-300">
                       <span>
-                        {pricing.months} month{pricing.months !== 1 ? "s" : ""} ×
+                        {pricing.months} month{pricing.months !== 1 ? "s" : ""} x
                         MXN {formData.monthly_rate.toLocaleString()}
                       </span>
                       <span>MXN {pricing.rentTotal.toLocaleString()}</span>
@@ -575,14 +580,14 @@ export function BookingForm({ booking, mode, defaultUnitId }: BookingFormProps) 
                     {pricing.waterTotal > 0 && (
                       <div className="flex justify-between text-gray-300">
                         <span>
-                          Water ({pricing.months} months × MXN{" "}
+                          Water ({pricing.months} months x MXN{" "}
                           {formData.water_fee_monthly})
                         </span>
                         <span>MXN {pricing.waterTotal.toLocaleString()}</span>
                       </div>
                     )}
                     <div className="flex justify-between text-gray-300">
-                      <span>Security Deposit (refundable)</span>
+                      <span>{tPayments("securityDeposit")} (refundable)</span>
                       <span>
                         MXN {pricing.securityDeposit.toLocaleString()}
                       </span>
@@ -601,7 +606,7 @@ export function BookingForm({ booking, mode, defaultUnitId }: BookingFormProps) 
                   <>
                     <div className="flex justify-between text-gray-300">
                       <span>
-                        {pricing.nights} night{pricing.nights !== 1 ? "s" : ""} ×{" "}
+                        {pricing.nights} {pricing.nights !== 1 ? t("nightPlural") : t("night")} x{" "}
                         {formData.currency}{" "}
                         {formData.nightly_rate.toLocaleString()}
                       </span>
@@ -610,20 +615,20 @@ export function BookingForm({ booking, mode, defaultUnitId }: BookingFormProps) 
                       </span>
                     </div>
                     <div className="flex justify-between text-gray-300">
-                      <span>Cleaning Fee</span>
+                      <span>{t("cleaningFee")}</span>
                       <span>
                         {formData.currency}{" "}
                         {pricing.cleaningFee.toLocaleString()}
                       </span>
                     </div>
                     <div className="flex justify-between text-gray-300">
-                      <span>Taxes ({formData.taxes_percent}%)</span>
+                      <span>{t("taxesAndFees")} ({formData.taxes_percent}%)</span>
                       <span>
                         {formData.currency} {pricing.taxes.toLocaleString()}
                       </span>
                     </div>
                     <div className="flex justify-between font-semibold text-white text-base pt-2 border-t border-gray-700">
-                      <span>Total</span>
+                      <span>{tCommon("total")}</span>
                       <span>
                         {formData.currency} {pricing.total.toLocaleString()}
                       </span>
@@ -639,42 +644,42 @@ export function BookingForm({ booking, mode, defaultUnitId }: BookingFormProps) 
       {/* Payment & Notes */}
       <Card>
         <CardHeader>
-          <CardTitle>Payment & Notes</CardTitle>
+          <CardTitle>{t("paymentInfo")} & {t("notes")}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Select
-              label="Payment Status"
+              label={t("status")}
               value={formData.payment_status}
               onChange={(e) =>
                 handleInputChange("payment_status", e.target.value)
               }
               options={[
-                { value: "pending", label: "Pending" },
+                { value: "pending", label: t("pending") },
                 { value: "partial", label: "Partial Payment" },
-                { value: "paid", label: "Paid" },
-                { value: "refunded", label: "Refunded" },
+                { value: "paid", label: tPayments("paid") },
+                { value: "refunded", label: tPayments("refund") },
               ]}
             />
             {isLongTerm && (
               <Select
-                label="Contract Status"
+                label={tContract("status")}
                 value={formData.contract_status}
                 onChange={(e) =>
                   handleInputChange("contract_status", e.target.value)
                 }
                 options={[
-                  { value: "not_needed", label: "Not Needed" },
-                  { value: "draft", label: "Draft" },
-                  { value: "sent", label: "Sent for Signature" },
-                  { value: "signed", label: "Signed" },
+                  { value: "not_needed", label: tContract("notNeeded") },
+                  { value: "draft", label: tContract("draft") },
+                  { value: "sent", label: tContract("sent") },
+                  { value: "signed", label: tContract("signed") },
                 ]}
               />
             )}
           </div>
           <div className="mt-4">
             <label className="block text-sm font-medium text-gray-300 mb-2">
-              Internal Notes
+              {t("bookingNotes")}
             </label>
             <textarea
               value={formData.notes}
@@ -695,7 +700,7 @@ export function BookingForm({ booking, mode, defaultUnitId }: BookingFormProps) 
           onClick={() => router.back()}
           disabled={isSubmitting}
         >
-          Cancel
+          {tCommon("cancel")}
         </Button>
         <Button
           type="submit"
@@ -703,7 +708,7 @@ export function BookingForm({ booking, mode, defaultUnitId }: BookingFormProps) 
           loading={isSubmitting}
           disabled={isSubmitting}
         >
-          {mode === "create" ? "Create Booking" : "Save Changes"}
+          {mode === "create" ? t("createNewBooking") : tCommon("save")}
         </Button>
       </div>
     </form>

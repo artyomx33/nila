@@ -7,6 +7,7 @@
 import { Cleaning } from "@/types";
 import { CleaningStatusBadge } from "./CleaningStatusBadge";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 interface CleaningCardProps {
   cleaning: Cleaning;
@@ -15,14 +16,15 @@ interface CleaningCardProps {
 }
 
 export function CleaningCard({ cleaning, unitName, cleanerName }: CleaningCardProps) {
+  const t = useTranslations("operations");
   const scheduledDate = new Date(cleaning.scheduled_date);
   const isToday = new Date().toDateString() === scheduledDate.toDateString();
 
   const typeLabels = {
-    turnover: "Turnover",
-    deep: "Deep Clean",
-    maintenance: "Maintenance",
-    inspection: "Inspection",
+    turnover: t("turnover"),
+    deep: t("deepClean"),
+    maintenance: t("maintenance"),
+    inspection: t("inspection"),
   };
 
   const completedItems = cleaning.checklist.filter((item) => item.completed).length;
@@ -73,7 +75,7 @@ export function CleaningCard({ cleaning, unitName, cleanerName }: CleaningCardPr
                 </span>
                 {isToday && (
                   <span className="badge-warning text-xs px-2 py-0.5 rounded-full ml-1">
-                    Today
+                    {t("today")}
                   </span>
                 )}
               </div>
@@ -94,7 +96,7 @@ export function CleaningCard({ cleaning, unitName, cleanerName }: CleaningCardPr
                 </svg>
                 <span>
                   {cleanerName || cleaning.cleaner_id || (
-                    <span className="text-amber-500">Unassigned</span>
+                    <span className="text-amber-500">{t("unassigned")}</span>
                   )}
                 </span>
               </div>
@@ -102,7 +104,7 @@ export function CleaningCard({ cleaning, unitName, cleanerName }: CleaningCardPr
               {cleaning.status === "in_progress" && (
                 <div className="mt-2">
                   <div className="flex items-center justify-between text-xs mb-1">
-                    <span>Progress</span>
+                    <span>{t("inProgress")}</span>
                     <span>{progress}%</span>
                   </div>
                   <div className="w-full bg-gray-700 rounded-full h-2">

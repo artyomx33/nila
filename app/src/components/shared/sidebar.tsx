@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils";
 import { useUIStore } from "@/lib/stores";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
 import {
   LayoutDashboard,
   Building2,
@@ -22,7 +23,7 @@ import {
 
 interface NavItem {
   id: string;
-  label: string;
+  labelKey: keyof IntlMessages["nav"];
   href: string;
   icon: React.ComponentType<{ className?: string }>;
 }
@@ -30,37 +31,37 @@ interface NavItem {
 const adminNavItems: NavItem[] = [
   {
     id: "dashboard",
-    label: "Dashboard",
+    labelKey: "dashboard",
     href: "/admin/dashboard",
     icon: LayoutDashboard,
   },
   {
     id: "units",
-    label: "Units",
+    labelKey: "units",
     href: "/admin/units",
     icon: Building2,
   },
   {
     id: "bookings",
-    label: "Bookings",
+    labelKey: "bookings",
     href: "/admin/bookings",
     icon: Calendar,
   },
   {
     id: "operations",
-    label: "Operations",
+    labelKey: "operations",
     href: "/admin/operations",
     icon: ClipboardList,
   },
   {
     id: "owners",
-    label: "Owners",
+    labelKey: "owners",
     href: "/admin/owners",
     icon: Users,
   },
   {
     id: "reports",
-    label: "Reports",
+    labelKey: "reports",
     href: "/admin/reports",
     icon: BarChart3,
   },
@@ -69,6 +70,8 @@ const adminNavItems: NavItem[] = [
 export default function Sidebar() {
   const pathname = usePathname();
   const { sidebarCollapsed, toggleCollapsed } = useUIStore();
+  const t = useTranslations("nav");
+  const tCommon = useTranslations("common");
 
   return (
     <aside
@@ -103,6 +106,7 @@ export default function Sidebar() {
         {adminNavItems.map((item) => {
           const Icon = item.icon;
           const isActive = pathname.startsWith(item.href);
+          const label = t(item.labelKey);
 
           return (
             <Link
@@ -113,10 +117,10 @@ export default function Sidebar() {
                 isActive && "sidebar-nav-item-active",
                 sidebarCollapsed && "justify-center"
               )}
-              title={sidebarCollapsed ? item.label : undefined}
+              title={sidebarCollapsed ? label : undefined}
             >
               <Icon className="w-5 h-5 flex-shrink-0" />
-              {!sidebarCollapsed && <span>{item.label}</span>}
+              {!sidebarCollapsed && <span>{label}</span>}
             </Link>
           );
         })}
@@ -132,14 +136,14 @@ export default function Sidebar() {
             "transition-all duration-200",
             sidebarCollapsed && "justify-center"
           )}
-          title={sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+          title={sidebarCollapsed ? tCommon("view") : tCommon("close")}
         >
           {sidebarCollapsed ? (
             <ChevronRight className="w-5 h-5" />
           ) : (
             <>
               <ChevronLeft className="w-5 h-5" />
-              <span className="text-sm">Collapse</span>
+              <span className="text-sm">{tCommon("close")}</span>
             </>
           )}
         </button>

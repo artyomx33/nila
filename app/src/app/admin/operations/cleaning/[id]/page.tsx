@@ -11,6 +11,7 @@ import { CleaningStatusBadge } from "@/components/operations/CleaningStatusBadge
 import { CleaningChecklist } from "@/components/operations/CleaningChecklist";
 import Link from "next/link";
 import { ChecklistItem, Cleaner } from "@/types";
+import { useTranslations } from "next-intl";
 
 export default function CleaningDetailPage({
   params,
@@ -18,6 +19,9 @@ export default function CleaningDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = use(params);
+  const t = useTranslations("operations");
+  const tCommon = useTranslations("common");
+
   const { getCleaning, updateChecklist, startCleaning, completeCleaning, verifyCleaning, assignCleaner } = useCleaningsStore();
   const cleaning = getCleaning(id);
 
@@ -29,15 +33,15 @@ export default function CleaningDetailPage({
     return (
       <div className="card-default p-12 text-center">
         <div className="text-6xl mb-4">❌</div>
-        <h2 className="text-2xl font-bold text-white mb-2">Cleaning Not Found</h2>
+        <h2 className="text-2xl font-bold text-white mb-2">{t("cleaningNotFound")}</h2>
         <p className="text-gray-400 mb-6">
-          The cleaning task you're looking for doesn't exist.
+          {t("cleaningNotFoundDesc")}
         </p>
         <Link
           href="/admin/operations/cleaning"
           className="btn-primary px-6 py-3 rounded-lg inline-block"
         >
-          Back to Schedule
+          {t("backToSchedule")}
         </Link>
       </div>
     );
@@ -46,11 +50,11 @@ export default function CleaningDetailPage({
   const cleaner = cleaning.cleaner_id ? availableCleaners.find(c => c.id === cleaning.cleaner_id) : null;
   const scheduledDate = new Date(cleaning.scheduled_date);
 
-  const typeLabels = {
-    turnover: "Turnover Cleaning",
-    deep: "Deep Cleaning",
-    maintenance: "Maintenance Cleaning",
-    inspection: "Inspection",
+  const typeLabels: Record<string, string> = {
+    turnover: t("turnoverCleaning"),
+    deep: t("deepCleaning"),
+    maintenance: t("maintenanceCleaning"),
+    inspection: t("inspection"),
   };
 
   const handleChecklistUpdate = (items: ChecklistItem[]) => {
@@ -85,22 +89,22 @@ export default function CleaningDetailPage({
           href="/admin/operations/cleaning"
           className="text-sm text-teal-400 hover:text-teal-300 mb-2 inline-block"
         >
-          ← Back to Schedule
+          ← {t("backToSchedule")}
         </Link>
         <div className="flex items-start justify-between">
           <div>
             <h1 className="text-3xl font-serif font-bold text-white mb-2">
-              Unit {cleaning.unit_id.split("-")[1]} - {typeLabels[cleaning.type]}
+              {t("unit")} {cleaning.unit_id.split("-")[1]} - {typeLabels[cleaning.type]}
             </h1>
             <p className="text-gray-400">
-              Scheduled for{" "}
+              {t("scheduledFor")}{" "}
               {scheduledDate.toLocaleDateString("en-US", {
                 weekday: "long",
                 month: "long",
                 day: "numeric",
                 year: "numeric",
               })}{" "}
-              at{" "}
+              {t("at")}{" "}
               {scheduledDate.toLocaleTimeString("en-US", {
                 hour: "numeric",
                 minute: "2-digit",
@@ -115,20 +119,20 @@ export default function CleaningDetailPage({
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {/* Unit Info */}
         <div className="card-default p-4">
-          <div className="text-sm text-gray-400 mb-2">Unit</div>
+          <div className="text-sm text-gray-400 mb-2">{t("unit")}</div>
           <div className="text-xl font-semibold text-white">
-            Unit {cleaning.unit_id.split("-")[1]}
+            {t("unit")} {cleaning.unit_id.split("-")[1]}
           </div>
           {cleaning.booking_id && (
             <div className="text-sm text-gray-400 mt-2">
-              Booking: {cleaning.booking_id}
+              {t("booking")}: {cleaning.booking_id}
             </div>
           )}
         </div>
 
         {/* Assigned Cleaner */}
         <div className="card-default p-4">
-          <div className="text-sm text-gray-400 mb-2">Assigned To</div>
+          <div className="text-sm text-gray-400 mb-2">{t("assignedTo")}</div>
           {cleaner ? (
             <div>
               <div className="text-xl font-semibold text-white">{cleaner.name}</div>
@@ -136,12 +140,12 @@ export default function CleaningDetailPage({
             </div>
           ) : (
             <div>
-              <div className="text-xl font-semibold text-amber-500">Unassigned</div>
+              <div className="text-xl font-semibold text-amber-500">{t("unassigned")}</div>
               <button
                 onClick={() => setShowAssignModal(true)}
                 className="text-sm text-teal-400 hover:text-teal-300 mt-2"
               >
-                Assign Cleaner →
+                {t("assignCleaner")} →
               </button>
             </div>
           )}
@@ -149,7 +153,7 @@ export default function CleaningDetailPage({
 
         {/* Timing */}
         <div className="card-default p-4">
-          <div className="text-sm text-gray-400 mb-2">Duration</div>
+          <div className="text-sm text-gray-400 mb-2">{t("duration")}</div>
           {cleaning.started_at && cleaning.completed_at ? (
             <div>
               <div className="text-xl font-semibold text-white">
@@ -158,10 +162,10 @@ export default function CleaningDetailPage({
                     new Date(cleaning.started_at).getTime()) /
                     (1000 * 60)
                 )}{" "}
-                minutes
+                {t("minutes")}
               </div>
               <div className="text-sm text-gray-400 mt-1">
-                Started at{" "}
+                {t("startedAt")}{" "}
                 {new Date(cleaning.started_at).toLocaleTimeString("en-US", {
                   hour: "numeric",
                   minute: "2-digit",
@@ -170,9 +174,9 @@ export default function CleaningDetailPage({
             </div>
           ) : cleaning.started_at ? (
             <div>
-              <div className="text-xl font-semibold text-amber-500">In Progress</div>
+              <div className="text-xl font-semibold text-amber-500">{t("inProgress")}</div>
               <div className="text-sm text-gray-400 mt-1">
-                Started at{" "}
+                {t("startedAt")}{" "}
                 {new Date(cleaning.started_at).toLocaleTimeString("en-US", {
                   hour: "numeric",
                   minute: "2-digit",
@@ -180,7 +184,7 @@ export default function CleaningDetailPage({
               </div>
             </div>
           ) : (
-            <div className="text-xl font-semibold text-gray-500">Not Started</div>
+            <div className="text-xl font-semibold text-gray-500">{t("notStarted")}</div>
           )}
         </div>
       </div>
@@ -192,7 +196,7 @@ export default function CleaningDetailPage({
             onClick={handleStartCleaning}
             className="btn-primary px-6 py-3 rounded-lg font-medium"
           >
-            Start Cleaning
+            {t("startCleaning")}
           </button>
         ) : null}
 
@@ -201,7 +205,7 @@ export default function CleaningDetailPage({
             onClick={handleCompleteCleaning}
             className="btn-primary px-6 py-3 rounded-lg font-medium"
           >
-            Mark as Completed
+            {t("markAsCompleted")}
           </button>
         ) : null}
 
@@ -210,13 +214,13 @@ export default function CleaningDetailPage({
             onClick={handleVerifyCleaning}
             className="bg-teal-600 hover:bg-teal-700 text-white px-6 py-3 rounded-lg font-medium transition-colors"
           >
-            Verify Cleaning
+            {t("verifyCleaning")}
           </button>
         ) : null}
 
         {cleaning.status === "verified" ? (
           <div className="badge-success px-6 py-3 rounded-lg font-medium">
-            ✓ Verified
+            ✓ {t("verified")}
           </div>
         ) : null}
 
@@ -224,14 +228,14 @@ export default function CleaningDetailPage({
           onClick={() => setShowAssignModal(true)}
           className="btn-ghost px-6 py-3 rounded-lg font-medium"
         >
-          {cleaning.cleaner_id ? 'Reassign' : 'Assign Cleaner'}
+          {cleaning.cleaner_id ? t("reassign") : t("assignCleaner")}
         </button>
       </div>
 
       {/* Checklist */}
       <div>
         <h2 className="text-xl font-semibold text-white mb-4">
-          Cleaning Checklist
+          {t("cleaningChecklist")}
         </h2>
         <CleaningChecklist
           items={cleaning.checklist}
@@ -242,21 +246,21 @@ export default function CleaningDetailPage({
 
       {/* Notes Section */}
       <div className="card-default p-6">
-        <h3 className="text-lg font-semibold text-white mb-4">Notes</h3>
+        <h3 className="text-lg font-semibold text-white mb-4">{t("notes")}</h3>
         {cleaning.notes ? (
           <p className="text-gray-300">{cleaning.notes}</p>
         ) : (
-          <p className="text-gray-500 italic">No notes added yet</p>
+          <p className="text-gray-500 italic">{t("noNotesYet")}</p>
         )}
         <button className="mt-4 text-sm text-teal-400 hover:text-teal-300">
-          + Add Note
+          + {t("addNote")}
         </button>
       </div>
 
       {/* Photos */}
       {cleaning.photos.length > 0 && (
         <div className="card-default p-6">
-          <h3 className="text-lg font-semibold text-white mb-4">Photos</h3>
+          <h3 className="text-lg font-semibold text-white mb-4">{t("photos")}</h3>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {cleaning.photos.map((photo, idx) => (
               <div
@@ -274,26 +278,26 @@ export default function CleaningDetailPage({
 
       {/* Timeline */}
       <div className="card-default p-6">
-        <h3 className="text-lg font-semibold text-white mb-4">Timeline</h3>
+        <h3 className="text-lg font-semibold text-white mb-4">{t("timeline")}</h3>
         <div className="space-y-4">
           {[
             {
-              label: "Created",
+              label: t("created"),
               date: cleaning.created_at,
               icon: "📝",
             },
             cleaning.started_at && {
-              label: "Started",
+              label: t("started"),
               date: cleaning.started_at,
               icon: "▶️",
             },
             cleaning.completed_at && {
-              label: "Completed",
+              label: t("completed"),
               date: cleaning.completed_at,
               icon: "✅",
             },
             cleaning.verified_at && {
-              label: "Verified",
+              label: t("verified"),
               date: cleaning.verified_at,
               icon: "✓",
             },
@@ -324,20 +328,20 @@ export default function CleaningDetailPage({
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
           <div className="bg-gray-900 border border-gray-800 rounded-lg p-6 max-w-md w-full mx-4">
             <h3 className="text-xl font-semibold text-white mb-4">
-              {cleaning.cleaner_id ? 'Reassign Cleaner' : 'Assign Cleaner'}
+              {cleaning.cleaner_id ? t("reassignCleaner") : t("assignCleaner")}
             </h3>
             <p className="text-gray-400 mb-4">
-              Select a cleaner for this cleaning task
+              {t("selectCleaner")}
             </p>
             <select
               value={selectedCleanerId}
               onChange={(e) => setSelectedCleanerId(e.target.value)}
               className="w-full px-3 py-2 bg-gray-800/50 border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-teal-500 mb-6"
             >
-              <option value="">Select a cleaner...</option>
+              <option value="">{t("selectCleanerPlaceholder")}</option>
               {availableCleaners.map((cleaner) => (
                 <option key={cleaner.id} value={cleaner.id}>
-                  {cleaner.name} - {cleaner.phone} (Rating: {cleaner.rating}/5)
+                  {cleaner.name} - {cleaner.phone} ({t("rating")}: {cleaner.rating}/5)
                 </option>
               ))}
             </select>
@@ -349,14 +353,14 @@ export default function CleaningDetailPage({
                 }}
                 className="flex-1 px-4 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-700 transition-colors"
               >
-                Cancel
+                {tCommon("cancel")}
               </button>
               <button
                 onClick={handleAssignCleaner}
                 disabled={!selectedCleanerId}
                 className="flex-1 px-4 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Assign
+                {t("assignTo")}
               </button>
             </div>
           </div>

@@ -4,7 +4,10 @@
 // Shows progress toward booking confirmation
 // ============================================
 
+"use client";
+
 import { useMemo } from "react";
+import { useTranslations } from "next-intl";
 import { NilaBooking, NilaPayment } from "@/lib/supabase/types";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -31,6 +34,12 @@ export function BookingStatusTracker({
   payments,
   onRefresh,
 }: BookingStatusTrackerProps) {
+  const t = useTranslations("bookings");
+  const tPayments = useTranslations("payments");
+  const tDocuments = useTranslations("documents");
+  const tContract = useTranslations("contract");
+  const tCommon = useTranslations("common");
+
   // Calculate payment totals by type
   const paymentSummary = useMemo(() => {
     const securityDeposit = payments
@@ -70,33 +79,33 @@ export function BookingStatusTracker({
       // Long-term booking requirements
       items.push({
         id: "security_deposit",
-        label: "Depósito de seguridad",
+        label: tPayments("securityDeposit"),
         completed: paymentSummary.securityDeposit >= securityDepositRequired,
         required: true,
-        detail: `${formatCurrency(paymentSummary.securityDeposit, (booking.currency as "MXN" | "USD") || "MXN")} de ${formatCurrency(securityDepositRequired, (booking.currency as "MXN" | "USD") || "MXN")}`,
+        detail: `${formatCurrency(paymentSummary.securityDeposit, (booking.currency as "MXN" | "USD") || "MXN")} / ${formatCurrency(securityDepositRequired, (booking.currency as "MXN" | "USD") || "MXN")}`,
         amount: paymentSummary.securityDeposit,
-        currency: booking.currency,
+        currency: booking.currency || undefined,
       });
 
       items.push({
         id: "first_month_rent",
-        label: "Primer mes de renta",
+        label: tPayments("rent"),
         completed: paymentSummary.rent >= monthlyRateRequired,
         required: true,
-        detail: `${formatCurrency(paymentSummary.rent, (booking.currency as "MXN" | "USD") || "MXN")} de ${formatCurrency(monthlyRateRequired, (booking.currency as "MXN" | "USD") || "MXN")}`,
+        detail: `${formatCurrency(paymentSummary.rent, (booking.currency as "MXN" | "USD") || "MXN")} / ${formatCurrency(monthlyRateRequired, (booking.currency as "MXN" | "USD") || "MXN")}`,
         amount: paymentSummary.rent,
-        currency: booking.currency,
+        currency: booking.currency || undefined,
       });
     } else {
       // Short-term booking requirements
       items.push({
         id: "full_payment",
-        label: "Pago completo",
+        label: tPayments("paid"),
         completed: paymentSummary.totalPaid >= totalRequired,
         required: true,
-        detail: `${formatCurrency(paymentSummary.totalPaid, (booking.currency as "MXN" | "USD") || "MXN")} de ${formatCurrency(totalRequired, (booking.currency as "MXN" | "USD") || "MXN")}`,
+        detail: `${formatCurrency(paymentSummary.totalPaid, (booking.currency as "MXN" | "USD") || "MXN")} / ${formatCurrency(totalRequired, (booking.currency as "MXN" | "USD") || "MXN")}`,
         amount: paymentSummary.totalPaid,
-        currency: booking.currency,
+        currency: booking.currency || undefined,
       });
     }
 
@@ -104,29 +113,29 @@ export function BookingStatusTracker({
     if (isLongTerm) {
       items.push({
         id: "passport_uploaded",
-        label: "Pasaporte/ID cargado",
+        label: tDocuments("passport") + "/" + tDocuments("idCard"),
         completed: Boolean(booking.guest_passport_url || booking.guest_id_url),
         required: true,
         detail: booking.guest_passport_url || booking.guest_id_url
-          ? "Documento cargado"
-          : "Pendiente de cargar",
+          ? tDocuments("uploaded")
+          : tDocuments("notUploaded"),
       });
     }
 
     // Contract item
     items.push({
       id: "contract_signed",
-      label: "Contrato firmado",
+      label: tContract("signed"),
       completed: booking.contract_status === "signed",
       required: true,
       detail:
         booking.contract_status === "signed"
-          ? "Firmado"
+          ? tContract("signed")
           : booking.contract_status === "sent"
-          ? "Enviado al huésped"
+          ? tContract("sent")
           : booking.contract_status === "draft"
-          ? "En borrador"
-          : "No iniciado",
+          ? tContract("draft")
+          : t("pending"),
     });
 
     return items;
@@ -137,6 +146,10 @@ export function BookingStatusTracker({
     securityDepositRequired,
     monthlyRateRequired,
     totalRequired,
+    t,
+    tPayments,
+    tDocuments,
+    tContract,
   ]);
 
   // Calculate completion percentage
@@ -156,17 +169,17 @@ export function BookingStatusTracker({
       <div className="flex items-center justify-between">
         <div>
           <h3 className="text-lg font-semibold text-gray-900">
-            Estado de confirmación
+            {t("status")}
           </h3>
           <p className="text-sm text-gray-500 mt-1">
-            {isLongTerm ? "Requisitos para renta de largo plazo" : "Requisitos para reservación"}
+            {isLongTerm ? t("longTerm") : t("shortTerm")}
           </p>
         </div>
         <div className="text-right">
           <div className="text-2xl font-bold text-gray-900">
             {completionPercentage}%
           </div>
-          <div className="text-xs text-gray-500">Completado</div>
+          <div className="text-xs text-gray-500">{t("completed")}</div>
         </div>
       </div>
 
@@ -203,10 +216,10 @@ export function BookingStatusTracker({
             </svg>
             <div className="flex-1">
               <h4 className="text-sm font-semibold text-green-900">
-                Listo para confirmar
+                {t("confirmBooking")}
               </h4>
               <p className="text-sm text-green-700 mt-1">
-                Todos los requisitos están completos. Esta reservación puede ser confirmada.
+                {t("confirmed")}
               </p>
             </div>
           </div>
@@ -263,11 +276,11 @@ export function BookingStatusTracker({
                     </h4>
                     {item.completed ? (
                       <Badge variant="success" size="sm">
-                        Completado
+                        {t("completed")}
                       </Badge>
                     ) : (
                       <Badge variant="warning" size="sm">
-                        Pendiente
+                        {t("pending")}
                       </Badge>
                     )}
                   </div>
@@ -290,17 +303,17 @@ export function BookingStatusTracker({
       {/* Payment Summary */}
       <Card padding="md" className="border border-gray-200 bg-gray-50">
         <h4 className="text-sm font-semibold text-gray-900 mb-3">
-          Resumen de pagos
+          {t("paymentInfo")}
         </h4>
         <div className="space-y-2">
           <div className="flex justify-between text-sm">
-            <span className="text-gray-600">Total pagado</span>
+            <span className="text-gray-600">{tPayments("totalPaid")}</span>
             <span className="font-semibold text-gray-900">
               {formatCurrency(paymentSummary.totalPaid, (booking.currency as "MXN" | "USD") || "MXN")}
             </span>
           </div>
           <div className="flex justify-between text-sm">
-            <span className="text-gray-600">Total requerido</span>
+            <span className="text-gray-600">{tPayments("totalDue")}</span>
             <span className="font-semibold text-gray-900">
               {formatCurrency(
                 isLongTerm
@@ -315,13 +328,13 @@ export function BookingStatusTracker({
               ? securityDepositRequired + monthlyRateRequired
               : totalRequired) && (
             <div className="flex justify-between text-sm pt-2 border-t border-gray-300">
-              <span className="text-red-600 font-medium">Pendiente</span>
+              <span className="text-red-600 font-medium">{tPayments("remaining")}</span>
               <span className="font-semibold text-red-600">
                 {formatCurrency(
                   (isLongTerm
                     ? securityDepositRequired + monthlyRateRequired
                     : totalRequired) - paymentSummary.totalPaid,
-                  booking.currency
+                  (booking.currency as "MXN" | "USD") || "MXN"
                 )}
               </span>
             </div>
@@ -331,8 +344,7 @@ export function BookingStatusTracker({
         {/* Payment count */}
         <div className="mt-3 pt-3 border-t border-gray-300">
           <p className="text-xs text-gray-500">
-            {payments.length} pago{payments.length !== 1 ? "s" : ""} registrado
-            {payments.length !== 1 ? "s" : ""}
+            {payments.length} {tPayments("title").toLowerCase()}
           </p>
         </div>
       </Card>
@@ -343,7 +355,7 @@ export function BookingStatusTracker({
           onClick={onRefresh}
           className="w-full px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
         >
-          Actualizar estado
+          {tCommon("update")}
         </button>
       )}
     </div>

@@ -5,6 +5,7 @@
 
 "use client";
 
+import { useTranslations } from "next-intl";
 import { DocumentUpload } from "./DocumentUpload";
 
 interface BookingDocumentsProps {
@@ -18,14 +19,16 @@ export function BookingDocuments({
   passportUrl,
   idUrl,
 }: BookingDocumentsProps) {
+  const t = useTranslations("documents");
+
   return (
     <div className="bg-white border border-gray-200 rounded-lg p-6">
       <div className="mb-6">
         <h3 className="text-lg font-semibold text-gray-900 mb-2">
-          Documentos del Huésped
+          {t("guestDocuments")}
         </h3>
         <p className="text-sm text-gray-600">
-          Sube el pasaporte y la identificación del huésped para completar el registro.
+          {t("dragDrop")}
         </p>
       </div>
 

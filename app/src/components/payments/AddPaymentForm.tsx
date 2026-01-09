@@ -6,6 +6,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { Payment, PaymentType, PaymentMethod } from "@/types";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -19,26 +20,6 @@ interface AddPaymentFormProps {
   onCancel: () => void;
 }
 
-const PAYMENT_TYPE_OPTIONS = [
-  { value: "reservation_deposit", label: "Depósito de Reservación" },
-  { value: "security_deposit", label: "Depósito de Seguridad" },
-  { value: "rent", label: "Renta" },
-  { value: "cleaning", label: "Limpieza" },
-  { value: "utilities", label: "Servicios (Agua/Luz/Internet)" },
-  { value: "damage", label: "Daños" },
-  { value: "refund", label: "Reembolso" },
-  { value: "other", label: "Otro" },
-];
-
-const PAYMENT_METHOD_OPTIONS = [
-  { value: "transfer", label: "Transferencia Bancaria" },
-  { value: "cash", label: "Efectivo" },
-  { value: "card", label: "Tarjeta" },
-  { value: "paypal", label: "PayPal" },
-  { value: "stripe", label: "Stripe" },
-  { value: "other", label: "Otro" },
-];
-
 export function AddPaymentForm({
   bookingId,
   totalDue,
@@ -46,6 +27,29 @@ export function AddPaymentForm({
   onSubmit,
   onCancel,
 }: AddPaymentFormProps) {
+  const t = useTranslations("payments");
+  const tc = useTranslations("common");
+
+  const PAYMENT_TYPE_OPTIONS = [
+    { value: "reservation_deposit", label: t("reservationDeposit") },
+    { value: "security_deposit", label: t("securityDeposit") },
+    { value: "rent", label: t("rent") },
+    { value: "cleaning", label: t("cleaning") },
+    { value: "utilities", label: t("utilities") },
+    { value: "damage", label: t("damage") },
+    { value: "refund", label: t("refund") },
+    { value: "other", label: t("other") },
+  ];
+
+  const PAYMENT_METHOD_OPTIONS = [
+    { value: "transfer", label: t("transfer") },
+    { value: "cash", label: t("cash") },
+    { value: "card", label: t("card") },
+    { value: "paypal", label: t("paypal") },
+    { value: "stripe", label: t("stripe") },
+    { value: "other", label: t("other") },
+  ];
+
   const [formData, setFormData] = useState({
     amount: "",
     payment_type: "reservation_deposit" as PaymentType,
@@ -64,11 +68,11 @@ export function AddPaymentForm({
     const newErrors: Record<string, string> = {};
 
     if (!formData.amount || parseFloat(formData.amount) <= 0) {
-      newErrors.amount = "El monto debe ser mayor a 0";
+      newErrors.amount = t("amountRequired");
     }
 
     if (!formData.paid_at) {
-      newErrors.paid_at = "La fecha de pago es requerida";
+      newErrors.paid_at = t("dateRequired");
     }
 
     if (Object.keys(newErrors).length > 0) {
@@ -101,7 +105,7 @@ export function AddPaymentForm({
       <div className="bg-charcoal-900 border border-charcoal-700 rounded-xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
         <div className="sticky top-0 bg-charcoal-900 border-b border-charcoal-700 px-6 py-4 flex items-center justify-between">
           <h2 className="text-xl font-semibold text-white">
-            Registrar Pago
+            {t("addPayment")}
           </h2>
           <button
             onClick={onCancel}
@@ -127,7 +131,7 @@ export function AddPaymentForm({
           {/* Amount with Quick Buttons */}
           <div>
             <Input
-              label="Monto"
+              label={t("amount")}
               type="number"
               step="0.01"
               min="0"
@@ -153,7 +157,7 @@ export function AddPaymentForm({
                   onClick={() => handleQuickAmount(1)}
                   className="px-2 py-1 text-xs bg-teal-600/20 text-teal-400 rounded hover:bg-teal-600/30 transition-colors"
                 >
-                  Total ({totalDue.toFixed(2)})
+                  {tc("total")} ({totalDue.toFixed(2)})
                 </button>
               </div>
             )}
@@ -161,7 +165,7 @@ export function AddPaymentForm({
 
           {/* Payment Type */}
           <Select
-            label="Tipo de Pago"
+            label={t("type")}
             required
             value={formData.payment_type}
             onChange={(e) =>
@@ -175,7 +179,7 @@ export function AddPaymentForm({
 
           {/* Payment Method */}
           <Select
-            label="Método de Pago"
+            label={t("method")}
             required
             value={formData.method}
             onChange={(e) =>
@@ -189,7 +193,7 @@ export function AddPaymentForm({
 
           {/* Payment Date */}
           <Input
-            label="Fecha de Pago"
+            label={t("paidAt")}
             type="date"
             required
             value={formData.paid_at}
@@ -201,27 +205,27 @@ export function AddPaymentForm({
 
           {/* Reference */}
           <Input
-            label="Referencia"
+            label={t("reference")}
             type="text"
             value={formData.reference}
             onChange={(e) =>
               setFormData({ ...formData, reference: e.target.value })
             }
-            placeholder="Ej: Número de transacción, folio"
-            hint="Opcional: Número de referencia o ID de transacción"
+            placeholder={t("referencePlaceholder")}
+            hint={t("referenceHint")}
           />
 
           {/* Notes */}
           <div>
             <label className="block text-sm font-medium text-zinc-300 mb-1.5">
-              Notas
+              {t("notes")}
             </label>
             <textarea
               value={formData.notes}
               onChange={(e) =>
                 setFormData({ ...formData, notes: e.target.value })
               }
-              placeholder="Notas adicionales sobre este pago..."
+              placeholder={t("notesPlaceholder")}
               rows={3}
               className="input-themed w-full px-3 py-2 rounded-lg text-sm resize-none"
             />
@@ -230,10 +234,10 @@ export function AddPaymentForm({
           {/* Actions */}
           <div className="flex gap-3 pt-4">
             <Button type="button" variant="secondary" onClick={onCancel}>
-              Cancelar
+              {tc("cancel")}
             </Button>
             <Button type="submit" variant="primary" className="flex-1">
-              Registrar Pago
+              {t("addPayment")}
             </Button>
           </div>
         </form>

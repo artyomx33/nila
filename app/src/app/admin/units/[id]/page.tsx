@@ -8,6 +8,7 @@
 import React, { use, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { getUnit } from "@/lib/db/units";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -21,6 +22,9 @@ interface UnitDetailPageProps {
 }
 
 export default function UnitDetailPage({ params }: UnitDetailPageProps) {
+  const t = useTranslations("units");
+  const tCommon = useTranslations("common");
+
   const router = useRouter();
   const [isEditing, setIsEditing] = useState(false);
   const { id } = use(params);
@@ -44,12 +48,12 @@ export default function UnitDetailPage({ params }: UnitDetailPageProps) {
                 d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
               />
             </svg>
-            <h3 className="text-lg font-semibold text-white mb-2">Unit not found</h3>
+            <h3 className="text-lg font-semibold text-white mb-2">{t("unitNotFound")}</h3>
             <p className="text-gray-400 mb-6">
-              The unit you&apos;re looking for doesn&apos;t exist or has been removed.
+              {t("unitNotFoundDesc")}
             </p>
             <Link href="/admin/units">
-              <Button variant="primary">Back to Units</Button>
+              <Button variant="primary">{t("backToUnits")}</Button>
             </Link>
           </div>
         </div>
@@ -65,11 +69,11 @@ export default function UnitDetailPage({ params }: UnitDetailPageProps) {
   };
 
   const typeLabels: Record<string, string> = {
-    apartment: "Apartment",
-    condo: "Condo",
-    villa: "Villa",
-    studio: "Studio",
-    penthouse: "Penthouse",
+    apartment: t("apartment"),
+    condo: t("condo"),
+    villa: t("villa"),
+    studio: t("studio"),
+    penthouse: t("penthouse"),
   };
 
   if (isEditing) {
@@ -79,10 +83,10 @@ export default function UnitDetailPage({ params }: UnitDetailPageProps) {
           {/* Header */}
           <div className="mb-6">
             <Link href="/admin/units" className="text-teal-400 hover:text-teal-300 text-sm mb-4 inline-block">
-              ← Back to Units
+              ← {t("backToUnits")}
             </Link>
-            <h1 className="text-3xl font-bold text-white">Edit Unit</h1>
-            <p className="text-gray-400 mt-1">Update unit information and settings</p>
+            <h1 className="text-3xl font-bold text-white">{t("editUnit")}</h1>
+            <p className="text-gray-400 mt-1">{t("updateUnitInfo")}</p>
           </div>
 
           <UnitForm unit={unit} mode="edit" />
@@ -97,19 +101,19 @@ export default function UnitDetailPage({ params }: UnitDetailPageProps) {
         {/* Header */}
         <div className="mb-6">
           <Link href="/admin/units" className="text-teal-400 hover:text-teal-300 text-sm mb-4 inline-block">
-            ← Back to Units
+            ← {t("backToUnits")}
           </Link>
           <div className="flex items-start justify-between">
             <div>
               <div className="flex items-center gap-3 mb-2">
                 <h1 className="text-3xl font-bold text-white">{unit.name}</h1>
-                <Badge variant={statusVariant[unit.status]}>{unit.status}</Badge>
+                <Badge variant={statusVariant[unit.status]}>{t(unit.status)}</Badge>
                 {unit.is_smart && (
                   <Badge variant="teal">
                     <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                     </svg>
-                    Smart Home
+                    {t("smartHome")}
                   </Badge>
                 )}
               </div>
@@ -119,7 +123,7 @@ export default function UnitDetailPage({ params }: UnitDetailPageProps) {
               <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
               </svg>
-              Edit Unit
+              {t("editUnit")}
             </Button>
           </div>
         </div>
@@ -131,7 +135,7 @@ export default function UnitDetailPage({ params }: UnitDetailPageProps) {
             {/* Photo Gallery */}
             <Card>
               <CardHeader>
-                <CardTitle>Photos</CardTitle>
+                <CardTitle>{t("photos")}</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-2 gap-4">
@@ -145,7 +149,7 @@ export default function UnitDetailPage({ params }: UnitDetailPageProps) {
                           <svg className="w-12 h-12 mx-auto mb-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                           </svg>
-                          <p className="text-xs text-gray-500">Photo {index + 1}</p>
+                          <p className="text-xs text-gray-500">{t("photo", { index: index + 1 })}</p>
                         </div>
                       </div>
                     ))
@@ -155,7 +159,7 @@ export default function UnitDetailPage({ params }: UnitDetailPageProps) {
                         <svg className="w-12 h-12 mx-auto mb-2 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                         </svg>
-                        <p className="text-sm text-gray-500">No photos yet</p>
+                        <p className="text-sm text-gray-500">{t("noPhotosYet")}</p>
                       </div>
                     </div>
                   )}
@@ -166,7 +170,7 @@ export default function UnitDetailPage({ params }: UnitDetailPageProps) {
             {/* Amenities */}
             <Card>
               <CardHeader>
-                <CardTitle>Amenities</CardTitle>
+                <CardTitle>{t("amenities")}</CardTitle>
               </CardHeader>
               <CardContent>
                 {unit.amenities && unit.amenities.length > 0 ? (
@@ -181,7 +185,7 @@ export default function UnitDetailPage({ params }: UnitDetailPageProps) {
                     ))}
                   </div>
                 ) : (
-                  <p className="text-gray-500 text-sm">No amenities listed</p>
+                  <p className="text-gray-500 text-sm">{t("noAmenitiesListed")}</p>
                 )}
               </CardContent>
             </Card>
@@ -190,7 +194,7 @@ export default function UnitDetailPage({ params }: UnitDetailPageProps) {
             {unit.guide && (
               <Card>
                 <CardHeader>
-                  <CardTitle>Guest Guide</CardTitle>
+                  <CardTitle>{t("guestGuide")}</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p className="text-gray-300 whitespace-pre-wrap">{unit.guide}</p>
@@ -204,24 +208,24 @@ export default function UnitDetailPage({ params }: UnitDetailPageProps) {
             {/* Basic Info */}
             <Card>
               <CardHeader>
-                <CardTitle>Unit Information</CardTitle>
+                <CardTitle>{t("unitInformation")}</CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
                 <div>
-                  <div className="text-sm text-gray-400">Type</div>
+                  <div className="text-sm text-gray-400">{t("type")}</div>
                   <div className="text-white font-medium">{typeLabels[unit.type]}</div>
                 </div>
                 <div>
-                  <div className="text-sm text-gray-400">Bedrooms / Bathrooms</div>
+                  <div className="text-sm text-gray-400">{t("bedroomsBathrooms")}</div>
                   <div className="text-white font-medium">{unit.bedrooms} BD / {unit.bathrooms} BA</div>
                 </div>
                 <div>
-                  <div className="text-sm text-gray-400">Floor</div>
-                  <div className="text-white font-medium">Floor {unit.floor}</div>
+                  <div className="text-sm text-gray-400">{t("floor")}</div>
+                  <div className="text-white font-medium">{t("floor")} {unit.floor}</div>
                 </div>
                 <div>
-                  <div className="text-sm text-gray-400">Rental Type</div>
-                  <div className="text-white font-medium capitalize">{unit.rental_type} Term</div>
+                  <div className="text-sm text-gray-400">{t("rentalType")}</div>
+                  <div className="text-white font-medium capitalize">{unit.rental_type} {t("term")}</div>
                 </div>
               </CardContent>
             </Card>
@@ -229,27 +233,27 @@ export default function UnitDetailPage({ params }: UnitDetailPageProps) {
             {/* Pricing */}
             <Card>
               <CardHeader>
-                <CardTitle>Pricing</CardTitle>
+                <CardTitle>{t("pricing")}</CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
                 <div>
-                  <div className="text-sm text-gray-400">Base Rate</div>
+                  <div className="text-sm text-gray-400">{t("baseRate")}</div>
                   <div className="text-2xl font-bold text-teal-400">
                     ${unit.pricing.base.toLocaleString()} <span className="text-sm text-gray-500">{unit.pricing.currency}</span>
                   </div>
-                  <div className="text-xs text-gray-500">per night</div>
+                  <div className="text-xs text-gray-500">{t("perNight")}</div>
                 </div>
                 <div className="pt-3 border-t border-gray-700 space-y-2">
                   <div className="flex justify-between">
-                    <span className="text-sm text-gray-400">High Season</span>
+                    <span className="text-sm text-gray-400">{t("highSeason")}</span>
                     <span className="text-sm text-white">${unit.pricing.high_season.toLocaleString()} {unit.pricing.currency}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-sm text-gray-400">Low Season</span>
+                    <span className="text-sm text-gray-400">{t("lowSeason")}</span>
                     <span className="text-sm text-white">${unit.pricing.low_season.toLocaleString()} {unit.pricing.currency}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-sm text-gray-400">Cleaning Fee</span>
+                    <span className="text-sm text-gray-400">{t("cleaningFee")}</span>
                     <span className="text-sm text-white">${unit.pricing.cleaning_fee.toLocaleString()} {unit.pricing.currency}</span>
                   </div>
                 </div>
@@ -260,7 +264,7 @@ export default function UnitDetailPage({ params }: UnitDetailPageProps) {
             {(unit.platform_urls.airbnb || unit.platform_urls.booking) && (
               <Card>
                 <CardHeader>
-                  <CardTitle>Platform Links</CardTitle>
+                  <CardTitle>{t("platformLinks")}</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-2">
                   {unit.platform_urls.airbnb && (
@@ -273,7 +277,7 @@ export default function UnitDetailPage({ params }: UnitDetailPageProps) {
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                       </svg>
-                      View on Airbnb
+                      {t("viewOnAirbnb")}
                     </a>
                   )}
                   {unit.platform_urls.booking && (
@@ -286,7 +290,7 @@ export default function UnitDetailPage({ params }: UnitDetailPageProps) {
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                       </svg>
-                      View on Booking.com
+                      {t("viewOnBooking")}
                     </a>
                   )}
                 </CardContent>

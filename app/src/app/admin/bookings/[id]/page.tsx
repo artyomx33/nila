@@ -2,6 +2,7 @@
 
 import { use, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { getBookingById, updateBooking } from "@/lib/db/bookings";
 import { getUnitById } from "@/lib/db/units";
 import {
@@ -21,6 +22,9 @@ export default function BookingDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const router = useRouter();
+  const t = useTranslations("bookings");
+  const tPayments = useTranslations("payments");
+  const tContract = useTranslations("contract");
   const { id } = use(params);
   const booking = getBookingById(id);
 
@@ -45,16 +49,16 @@ export default function BookingDetailPage({
       <div className="min-h-screen bg-charcoal-950 flex items-center justify-center">
         <div className="text-center">
           <h2 className="text-2xl font-bold text-white mb-2">
-            Reservación no encontrada
+            {t("bookingNotFound")}
           </h2>
           <p className="text-zinc-500 mb-4">
-            La reservación que buscas no existe o ha sido eliminada.
+            {t("bookingNotFoundDescription")}
           </p>
           <button
             onClick={() => router.push("/admin/bookings")}
             className="px-4 py-2 bg-teal-500 text-white rounded-lg hover:bg-teal-600"
           >
-            Volver a Reservaciones
+            {t("backToBookings")}
           </button>
         </div>
       </div>
@@ -75,7 +79,7 @@ export default function BookingDetailPage({
   };
 
   const handleDeletePayment = (paymentId: string) => {
-    if (confirm("¿Estás seguro de eliminar este pago?")) {
+    if (confirm(t("deletePaymentConfirm"))) {
       deletePayment(paymentId);
       loadPayments();
     }
@@ -102,7 +106,7 @@ export default function BookingDetailPage({
               d="M15 19l-7-7 7-7"
             />
           </svg>
-          Volver a reservaciones
+          {t("backToBookings")}
         </button>
 
         <div className="flex items-start justify-between">
@@ -111,7 +115,7 @@ export default function BookingDetailPage({
               {booking.guest.name}
             </h1>
             <p className="text-sm text-zinc-500 mt-1">
-              Reservación #{booking.id}
+              {t("bookingDetails")} #{booking.id}
             </p>
           </div>
 
@@ -129,30 +133,30 @@ export default function BookingDetailPage({
           {/* Guest Information */}
           <div className="bg-charcoal-800/60 border border-charcoal-700 rounded-lg p-6">
             <h2 className="text-lg font-semibold text-white mb-4">
-              Información del Huésped
+              {t("guestInfo")}
             </h2>
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="text-sm font-medium text-zinc-300">
-                  Nombre completo
+                  {t("fullName")}
                 </label>
                 <p className="text-white mt-1">{booking.guest.name}</p>
               </div>
               <div>
                 <label className="text-sm font-medium text-zinc-300">
-                  Email
+                  {t("guestEmail")}
                 </label>
                 <p className="text-white mt-1">{booking.guest.email}</p>
               </div>
               <div>
                 <label className="text-sm font-medium text-zinc-300">
-                  Teléfono
+                  {t("guestPhone")}
                 </label>
                 <p className="text-white mt-1">{booking.guest.phone}</p>
               </div>
               <div>
                 <label className="text-sm font-medium text-zinc-300">
-                  Nacionalidad
+                  {t("nationality")}
                 </label>
                 <p className="text-white mt-1">
                   {booking.guest.nationality}
@@ -160,7 +164,7 @@ export default function BookingDetailPage({
               </div>
               <div>
                 <label className="text-sm font-medium text-zinc-300">
-                  Número de huéspedes
+                  {t("guestsCount")}
                 </label>
                 <p className="text-white mt-1">
                   {booking.guest.guests_count}
@@ -169,7 +173,7 @@ export default function BookingDetailPage({
               {booking.guest.notes && (
                 <div className="col-span-2">
                   <label className="text-sm font-medium text-zinc-300">
-                    Notas del huésped
+                    {t("guestNotes")}
                   </label>
                   <p className="text-white mt-1">{booking.guest.notes}</p>
                 </div>
@@ -180,27 +184,26 @@ export default function BookingDetailPage({
           {/* Stay Details */}
           <div className="bg-charcoal-800/60 border border-charcoal-700 rounded-lg p-6">
             <h2 className="text-lg font-semibold text-white mb-4">
-              Detalles de la Estadía
+              {t("stayDetails")}
             </h2>
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="text-sm font-medium text-zinc-300">
-                  Unidad
+                  {t("unit")}
                 </label>
                 <p className="text-white mt-1">{unit?.name || "N/A"}</p>
               </div>
               <div>
                 <label className="text-sm font-medium text-zinc-300">
-                  Duración
+                  {t("duration")}
                 </label>
                 <p className="text-white mt-1">
-                  {booking.pricing.nights} noche
-                  {booking.pricing.nights !== 1 ? "s" : ""}
+                  {booking.pricing.nights} {booking.pricing.nights !== 1 ? t("nightPlural") : t("night")}
                 </p>
               </div>
               <div>
                 <label className="text-sm font-medium text-zinc-300">
-                  Check-in
+                  {t("checkIn")}
                 </label>
                 <p className="text-white mt-1">
                   {formatDate(booking.check_in)}
@@ -208,7 +211,7 @@ export default function BookingDetailPage({
               </div>
               <div>
                 <label className="text-sm font-medium text-zinc-300">
-                  Check-out
+                  {t("checkOut")}
                 </label>
                 <p className="text-white mt-1">
                   {formatDate(booking.check_out)}
@@ -216,21 +219,21 @@ export default function BookingDetailPage({
               </div>
               <div>
                 <label className="text-sm font-medium text-zinc-300">
-                  Fuente de reservación
+                  {t("bookingSource")}
                 </label>
                 <p className="text-white mt-1 capitalize">
                   {booking.source === "booking"
-                    ? "Booking.com"
+                    ? t("bookingCom")
                     : booking.source === "airbnb"
-                    ? "Airbnb"
+                    ? t("airbnb")
                     : booking.source === "direct"
-                    ? "Directo"
-                    : "Propietario"}
+                    ? t("direct")
+                    : t("owner")}
                 </p>
               </div>
               <div>
                 <label className="text-sm font-medium text-zinc-300">
-                  Fecha de creación
+                  {t("creationDate")}
                 </label>
                 <p className="text-white mt-1">
                   {formatDate(booking.created_at)}
@@ -241,7 +244,7 @@ export default function BookingDetailPage({
             {booking.notes && (
               <div className="mt-4 pt-4 border-t border-charcoal-700">
                 <label className="text-sm font-medium text-zinc-300">
-                  Notas de la reservación
+                  {t("bookingNotes")}
                 </label>
                 <p className="text-white mt-1">{booking.notes}</p>
               </div>
@@ -251,13 +254,12 @@ export default function BookingDetailPage({
           {/* Pricing Breakdown */}
           <div className="bg-charcoal-800/60 border border-charcoal-700 rounded-lg p-6">
             <h2 className="text-lg font-semibold text-white mb-4">
-              Desglose de Precios
+              {t("pricingBreakdown")}
             </h2>
             <div className="space-y-3">
               <div className="flex justify-between text-zinc-300">
                 <span>
-                  {booking.pricing.nights} noche
-                  {booking.pricing.nights !== 1 ? "s" : ""} ×{" "}
+                  {booking.pricing.nights} {booking.pricing.nights !== 1 ? t("nightPlural") : t("night")} x{" "}
                   {formatCurrency(
                     booking.pricing.nightly_rate,
                     booking.pricing.currency
@@ -271,7 +273,7 @@ export default function BookingDetailPage({
                 </span>
               </div>
               <div className="flex justify-between text-zinc-300">
-                <span>Tarifa de limpieza</span>
+                <span>{t("cleaningFee")}</span>
                 <span>
                   {formatCurrency(
                     booking.pricing.cleaning_fee,
@@ -280,7 +282,7 @@ export default function BookingDetailPage({
                 </span>
               </div>
               <div className="flex justify-between text-zinc-300">
-                <span>Impuestos y tarifas</span>
+                <span>{t("taxesAndFees")}</span>
                 <span>
                   {formatCurrency(
                     booking.pricing.taxes,
@@ -289,7 +291,7 @@ export default function BookingDetailPage({
                 </span>
               </div>
               <div className="flex justify-between text-lg font-semibold text-white pt-3 border-t border-charcoal-700">
-                <span>Total</span>
+                <span>{tPayments("totalDue")}</span>
                 <span>
                   {formatCurrency(
                     booking.pricing.total,
@@ -303,7 +305,7 @@ export default function BookingDetailPage({
           {/* Payments Section */}
           <div className="bg-charcoal-800/60 border border-charcoal-700 rounded-lg p-6">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold text-white">Pagos</h2>
+              <h2 className="text-lg font-semibold text-white">{tPayments("title")}</h2>
               <button
                 onClick={() => setShowPaymentForm(true)}
                 className="px-3 py-1.5 bg-teal-600 text-white text-sm rounded-lg hover:bg-teal-700 transition-colors flex items-center gap-1.5"
@@ -321,7 +323,7 @@ export default function BookingDetailPage({
                     d="M12 4v16m8-8H4"
                   />
                 </svg>
-                Agregar Pago
+                {tPayments("addPayment")}
               </button>
             </div>
 
@@ -335,27 +337,27 @@ export default function BookingDetailPage({
           {(booking as any).booking_type === "long_term" && (
             <div className="bg-charcoal-800/60 border border-charcoal-700 rounded-lg p-6">
               <h2 className="text-lg font-semibold text-white mb-4">
-                Rental Contract
+                {t("rentalContract")}
               </h2>
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-zinc-400">Contract Status</p>
+                  <p className="text-sm text-zinc-400">{t("contractStatus")}</p>
                   <p className="text-white mt-1">
                     {(booking as any).contract_status === "signed" ? (
                       <span className="text-green-600 font-medium">
-                        Signed{booking.contract_signed_at && ` on ${formatDate(booking.contract_signed_at)}`}
+                        {tContract("signed")}{booking.contract_signed_at && ` on ${formatDate(booking.contract_signed_at)}`}
                       </span>
                     ) : (booking as any).contract_status === "sent" ? (
                       <span className="text-yellow-600 font-medium">
-                        Sent for signature
+                        {t("sentForSignature")}
                       </span>
                     ) : (booking as any).contract_status === "draft" ? (
                       <span className="text-zinc-400 font-medium">
-                        Draft
+                        {tContract("draft")}
                       </span>
                     ) : (
                       <span className="text-zinc-500 font-medium">
-                        Not needed
+                        {tContract("notNeeded")}
                       </span>
                     )}
                   </p>
@@ -364,7 +366,7 @@ export default function BookingDetailPage({
                   onClick={() => router.push(`/admin/bookings/${booking.id}/contract`)}
                   className="px-4 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition-colors"
                 >
-                  View Contract
+                  {tContract("viewContract")}
                 </button>
               </div>
             </div>
@@ -384,7 +386,7 @@ export default function BookingDetailPage({
           {/* Quick Actions */}
           <div className="bg-charcoal-800/60 border border-charcoal-700 rounded-lg p-6">
             <h3 className="text-sm font-semibold text-zinc-300 mb-3">
-              Acciones Rápidas
+              {t("quickActions")}
             </h3>
             <div className="space-y-2">
               {booking.status === "pending" && (
@@ -392,7 +394,7 @@ export default function BookingDetailPage({
                   onClick={() => handleStatusChange("confirmed")}
                   className="w-full px-4 py-2 bg-teal-500 text-white rounded-lg hover:bg-teal-600 transition-colors text-sm font-medium"
                 >
-                  Confirmar Reservación
+                  {t("confirmBooking")}
                 </button>
               )}
               {booking.status === "confirmed" && (
@@ -400,7 +402,7 @@ export default function BookingDetailPage({
                   onClick={() => handleStatusChange("checked_in")}
                   className="w-full px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors text-sm font-medium"
                 >
-                  Marcar Check-in
+                  {t("markCheckIn")}
                 </button>
               )}
               {booking.status === "checked_in" && (
@@ -408,21 +410,21 @@ export default function BookingDetailPage({
                   onClick={() => handleStatusChange("checked_out")}
                   className="w-full px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors text-sm font-medium"
                 >
-                  Marcar Check-out
+                  {t("markCheckOut")}
                 </button>
               )}
               <button className="w-full px-4 py-2 bg-charcoal-700 text-zinc-300 rounded-lg hover:bg-charcoal-600 transition-colors text-sm font-medium">
-                Enviar Email
+                {t("sendEmail")}
               </button>
               <button className="w-full px-4 py-2 bg-charcoal-700 text-zinc-300 rounded-lg hover:bg-charcoal-600 transition-colors text-sm font-medium">
-                Generar Factura
+                {t("generateInvoice")}
               </button>
               {booking.status !== "cancelled" && (
                 <button
                   onClick={() => handleStatusChange("cancelled")}
                   className="w-full px-4 py-2 bg-red-50 text-red-600 border border-red-200 rounded-lg hover:bg-red-100 transition-colors text-sm font-medium"
                 >
-                  Cancelar Reservación
+                  {t("cancelBooking")}
                 </button>
               )}
             </div>
@@ -431,14 +433,14 @@ export default function BookingDetailPage({
           {/* Timeline */}
           <div className="bg-charcoal-800/60 border border-charcoal-700 rounded-lg p-6">
             <h3 className="text-sm font-semibold text-zinc-300 mb-4">
-              Historial
+              {t("timeline")}
             </h3>
             <div className="space-y-4">
               <div className="flex gap-3">
                 <div className="flex-shrink-0 w-2 h-2 mt-2 rounded-full bg-teal-500" />
                 <div>
                   <p className="text-sm font-medium text-white">
-                    Reservación creada
+                    {t("bookingCreated")}
                   </p>
                   <p className="text-xs text-zinc-500 mt-1">
                     {formatDate(booking.created_at)}
@@ -450,7 +452,7 @@ export default function BookingDetailPage({
                   <div className="flex-shrink-0 w-2 h-2 mt-2 rounded-full bg-green-500" />
                   <div>
                     <p className="text-sm font-medium text-white">
-                      Contrato firmado
+                      {t("contractSigned")}
                     </p>
                     <p className="text-xs text-zinc-500 mt-1">
                       {formatDate(booking.contract_signed_at)}
@@ -463,7 +465,7 @@ export default function BookingDetailPage({
                   <div className="flex-shrink-0 w-2 h-2 mt-2 rounded-full bg-red-500" />
                   <div>
                     <p className="text-sm font-medium text-white">
-                      Reservación cancelada
+                      {t("bookingCancelled")}
                     </p>
                   </div>
                 </div>

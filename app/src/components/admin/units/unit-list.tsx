@@ -7,6 +7,7 @@
 
 import React from "react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { Unit } from "@/types";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -17,6 +18,9 @@ interface UnitListProps {
 }
 
 export function UnitList({ units }: UnitListProps) {
+  const t = useTranslations("units");
+  const tc = useTranslations("common");
+
   const statusVariant = {
     available: "success" as const,
     occupied: "warning" as const,
@@ -25,11 +29,18 @@ export function UnitList({ units }: UnitListProps) {
   };
 
   const typeLabels: Record<string, string> = {
-    apartment: "Apartment",
-    condo: "Condo",
-    villa: "Villa",
-    studio: "Studio",
-    penthouse: "Penthouse",
+    apartment: t("apartment"),
+    condo: t("condo"),
+    villa: t("villa"),
+    studio: t("studio"),
+    penthouse: t("penthouse"),
+  };
+
+  const statusLabels: Record<string, string> = {
+    available: t("available"),
+    occupied: t("occupied"),
+    maintenance: t("maintenance"),
+    unavailable: t("unavailable"),
   };
 
   if (units.length === 0) {
@@ -48,9 +59,9 @@ export function UnitList({ units }: UnitListProps) {
             d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
           />
         </svg>
-        <h3 className="text-lg font-semibold text-white mb-2">No units found</h3>
+        <h3 className="text-lg font-semibold text-white mb-2">{t("noUnits")}</h3>
         <p className="text-gray-400 max-w-md">
-          No units match your current filters. Try adjusting your search criteria or create a new unit.
+          {t("noUnitsDescription")}
         </p>
       </div>
     );
@@ -63,25 +74,25 @@ export function UnitList({ units }: UnitListProps) {
           <thead className="bg-gray-800/50 border-b border-gray-700">
             <tr>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
-                Unit
+                {t("title")}
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
-                Type
+                {t("type")}
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
-                Details
+                {tc("details")}
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
-                Location
+                {t("location")}
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
-                Price
+                {t("price")}
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
-                Status
+                {tc("status")}
               </th>
               <th className="px-6 py-3 text-right text-xs font-medium text-gray-400 uppercase tracking-wider">
-                Actions
+                {tc("actions")}
               </th>
             </tr>
           </thead>
@@ -116,10 +127,10 @@ export function UnitList({ units }: UnitListProps) {
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="text-sm text-gray-300">
-                    {unit.bedrooms} BD / {unit.bathrooms} BA
+                    {unit.bedrooms} {t("bd")} / {unit.bathrooms} {t("ba")}
                   </div>
                   {unit.floor && (
-                    <div className="text-xs text-gray-500">Floor {unit.floor}</div>
+                    <div className="text-xs text-gray-500">{t("floor")} {unit.floor}</div>
                   )}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
@@ -129,18 +140,18 @@ export function UnitList({ units }: UnitListProps) {
                   <div className="text-sm font-medium text-teal-400">
                     ${unit.pricing.base.toLocaleString()}
                   </div>
-                  <div className="text-xs text-gray-500">{unit.pricing.currency}/night</div>
+                  <div className="text-xs text-gray-500">{unit.pricing.currency}/{t("night")}</div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <Badge variant={statusVariant[unit.status]} size="sm">
-                    {unit.status}
+                    {statusLabels[unit.status]}
                   </Badge>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                   <div className="flex items-center justify-end gap-2">
                     <Link href={`/admin/units/${unit.id}`}>
                       <Button variant="ghost" size="sm">
-                        View
+                        {tc("view")}
                       </Button>
                     </Link>
                     <Link href={`/admin/units/${unit.id}`}>

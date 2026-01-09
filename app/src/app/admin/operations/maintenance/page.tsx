@@ -8,8 +8,12 @@ import { useState } from "react";
 import { getMaintenanceRequests } from "@/lib/db/maintenance";
 import { MaintenanceCard } from "@/components/operations/MaintenanceCard";
 import { MaintenanceStatus, MaintenancePriority, MaintenanceCategory } from "@/types";
+import { useTranslations } from "next-intl";
 
 export default function MaintenancePage() {
+  const t = useTranslations("operations");
+  const tCommon = useTranslations("common");
+
   const [statusFilter, setStatusFilter] = useState<MaintenanceStatus | "all">("all");
   const [priorityFilter, setPriorityFilter] = useState<MaintenancePriority | "all">("all");
   const [categoryFilter, setCategoryFilter] = useState<MaintenanceCategory | "all">("all");
@@ -37,31 +41,31 @@ export default function MaintenancePage() {
   });
 
   const statusOptions: { value: MaintenanceStatus | "all"; label: string }[] = [
-    { value: "all", label: "All Status" },
-    { value: "reported", label: "Reported" },
-    { value: "scheduled", label: "Scheduled" },
-    { value: "in_progress", label: "In Progress" },
-    { value: "completed", label: "Completed" },
-    { value: "cancelled", label: "Cancelled" },
+    { value: "all", label: t("allStatus") },
+    { value: "reported", label: t("reported") },
+    { value: "scheduled", label: t("scheduled") },
+    { value: "in_progress", label: t("inProgress") },
+    { value: "completed", label: t("completed") },
+    { value: "cancelled", label: t("cancelled") },
   ];
 
   const priorityOptions: { value: MaintenancePriority | "all"; label: string }[] = [
-    { value: "all", label: "All Priorities" },
-    { value: "urgent", label: "Urgent" },
-    { value: "high", label: "High" },
-    { value: "medium", label: "Medium" },
-    { value: "low", label: "Low" },
+    { value: "all", label: t("allPriorities") },
+    { value: "urgent", label: t("urgent") },
+    { value: "high", label: t("high") },
+    { value: "medium", label: t("medium") },
+    { value: "low", label: t("low") },
   ];
 
   const categoryOptions: { value: MaintenanceCategory | "all"; label: string }[] = [
-    { value: "all", label: "All Categories" },
-    { value: "plumbing", label: "Plumbing" },
-    { value: "electrical", label: "Electrical" },
-    { value: "hvac", label: "HVAC" },
-    { value: "appliance", label: "Appliance" },
-    { value: "structural", label: "Structural" },
-    { value: "cosmetic", label: "Cosmetic" },
-    { value: "other", label: "Other" },
+    { value: "all", label: t("allCategories") },
+    { value: "plumbing", label: t("plumbing") },
+    { value: "electrical", label: t("electrical") },
+    { value: "hvac", label: t("hvac") },
+    { value: "appliance", label: t("appliance") },
+    { value: "structural", label: t("structural") },
+    { value: "cosmetic", label: t("cosmetic") },
+    { value: "other", label: t("other") },
   ];
 
   return (
@@ -70,14 +74,14 @@ export default function MaintenancePage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-serif font-bold text-white mb-2">
-            Maintenance Requests
+            {t("maintenanceRequests")}
           </h1>
           <p className="text-gray-400">
-            Track and manage maintenance issues
+            {t("trackMaintenance")}
           </p>
         </div>
         <button className="btn-primary px-6 py-3 rounded-lg font-medium">
-          + Report Issue
+          + {t("reportIssue")}
         </button>
       </div>
 
@@ -85,22 +89,22 @@ export default function MaintenancePage() {
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         {[
           {
-            label: "Total",
+            label: tCommon("total"),
             value: requests.length,
             color: "text-white",
           },
           {
-            label: "Urgent",
+            label: t("urgent"),
             value: requests.filter((r) => r.priority === "urgent").length,
             color: "text-red-400",
           },
           {
-            label: "In Progress",
+            label: t("inProgress"),
             value: requests.filter((r) => r.status === "in_progress").length,
             color: "text-amber-400",
           },
           {
-            label: "Completed",
+            label: t("completed"),
             value: requests.filter((r) => r.status === "completed").length,
             color: "text-teal-400",
           },
@@ -116,7 +120,7 @@ export default function MaintenancePage() {
       <div className="card-default p-4">
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <div>
-            <label className="block text-sm text-gray-400 mb-2">Status</label>
+            <label className="block text-sm text-gray-400 mb-2">{t("status")}</label>
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value as any)}
@@ -131,7 +135,7 @@ export default function MaintenancePage() {
           </div>
 
           <div>
-            <label className="block text-sm text-gray-400 mb-2">Priority</label>
+            <label className="block text-sm text-gray-400 mb-2">{t("priority")}</label>
             <select
               value={priorityFilter}
               onChange={(e) => setPriorityFilter(e.target.value as any)}
@@ -146,7 +150,7 @@ export default function MaintenancePage() {
           </div>
 
           <div>
-            <label className="block text-sm text-gray-400 mb-2">Category</label>
+            <label className="block text-sm text-gray-400 mb-2">{t("category")}</label>
             <select
               value={categoryFilter}
               onChange={(e) => setCategoryFilter(e.target.value as any)}
@@ -167,10 +171,10 @@ export default function MaintenancePage() {
         <div className="card-default p-12 text-center">
           <div className="text-6xl mb-4">✅</div>
           <h3 className="text-xl font-semibold text-white mb-2">
-            No maintenance requests found
+            {t("noMaintenanceRequests")}
           </h3>
           <p className="text-gray-400 mb-6">
-            No requests match your current filters
+            {t("noRequestsMatch")}
           </p>
           <button
             onClick={() => {
@@ -180,7 +184,7 @@ export default function MaintenancePage() {
             }}
             className="btn-primary px-6 py-2 rounded-lg"
           >
-            Reset Filters
+            {t("resetFilters")}
           </button>
         </div>
       ) : (
@@ -191,7 +195,7 @@ export default function MaintenancePage() {
             <div>
               <div className="flex items-center gap-2 mb-3">
                 <span className="text-red-400 text-lg">⚠️</span>
-                <h2 className="text-lg font-semibold text-white">Urgent Issues</h2>
+                <h2 className="text-lg font-semibold text-white">{t("urgentIssues")}</h2>
                 <div className="flex-1 h-px bg-red-500/30" />
               </div>
               <div className="space-y-3">
@@ -201,7 +205,7 @@ export default function MaintenancePage() {
                     <MaintenanceCard
                       key={request.id}
                       maintenance={request}
-                      unitName={`Unit ${request.unit_id.split("-")[1]}`}
+                      unitName={`${t("unit")} ${request.unit_id.split("-")[1]}`}
                     />
                   ))}
               </div>
@@ -214,7 +218,7 @@ export default function MaintenancePage() {
           ).length > 0 && (
             <div>
               <div className="flex items-center gap-2 mb-3">
-                <h2 className="text-lg font-semibold text-white">Active Requests</h2>
+                <h2 className="text-lg font-semibold text-white">{t("activeRequests")}</h2>
                 <div className="flex-1 h-px bg-gray-700" />
               </div>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
@@ -229,7 +233,7 @@ export default function MaintenancePage() {
                     <MaintenanceCard
                       key={request.id}
                       maintenance={request}
-                      unitName={`Unit ${request.unit_id.split("-")[1]}`}
+                      unitName={`${t("unit")} ${request.unit_id.split("-")[1]}`}
                     />
                   ))}
               </div>
@@ -240,7 +244,7 @@ export default function MaintenancePage() {
           {requests.filter((r) => r.status === "completed").length > 0 && (
             <div>
               <div className="flex items-center gap-2 mb-3">
-                <h2 className="text-lg font-semibold text-white">Completed</h2>
+                <h2 className="text-lg font-semibold text-white">{t("completed")}</h2>
                 <div className="flex-1 h-px bg-gray-700" />
               </div>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
@@ -250,7 +254,7 @@ export default function MaintenancePage() {
                     <MaintenanceCard
                       key={request.id}
                       maintenance={request}
-                      unitName={`Unit ${request.unit_id.split("-")[1]}`}
+                      unitName={`${t("unit")} ${request.unit_id.split("-")[1]}`}
                     />
                   ))}
               </div>

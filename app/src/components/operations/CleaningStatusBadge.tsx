@@ -2,48 +2,44 @@
 // Cleaning Status Badge Component
 // ============================================
 
+"use client";
+
 import { CleaningStatus } from "@/types";
+import { useTranslations } from "next-intl";
 
 interface CleaningStatusBadgeProps {
   status: CleaningStatus;
   size?: "sm" | "md";
 }
 
-const statusConfig: Record<
-  CleaningStatus,
-  { label: string; className: string }
-> = {
-  pending: {
-    label: "Pending",
-    className: "badge-muted",
-  },
-  assigned: {
-    label: "Assigned",
-    className: "badge-teal",
-  },
-  in_progress: {
-    label: "In Progress",
-    className: "badge-warning",
-  },
-  completed: {
-    label: "Completed",
-    className: "badge-success",
-  },
-  verified: {
-    label: "Verified",
-    className: "badge-teal",
-  },
+const statusClassNames: Record<CleaningStatus, string> = {
+  pending: "badge-muted",
+  assigned: "badge-teal",
+  in_progress: "badge-warning",
+  completed: "badge-success",
+  verified: "badge-teal",
 };
 
 export function CleaningStatusBadge({ status, size = "md" }: CleaningStatusBadgeProps) {
-  const config = statusConfig[status];
+  const t = useTranslations("operations");
+
+  const statusLabels: Record<CleaningStatus, string> = {
+    pending: t("pending"),
+    assigned: t("assigned"),
+    in_progress: t("inProgress"),
+    completed: t("completed"),
+    verified: t("verified"),
+  };
+
+  const className = statusClassNames[status];
+  const label = statusLabels[status];
   const sizeClass = size === "sm" ? "text-xs px-2 py-0.5" : "text-sm px-3 py-1";
 
   return (
     <span
-      className={`inline-flex items-center rounded-full font-medium ${config.className} ${sizeClass}`}
+      className={`inline-flex items-center rounded-full font-medium ${className} ${sizeClass}`}
     >
-      {config.label}
+      {label}
     </span>
   );
 }

@@ -6,6 +6,7 @@
 "use client";
 
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import Avatar from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 
@@ -50,6 +51,9 @@ const mockOwners = [
 ];
 
 export default function OwnersPage() {
+  const t = useTranslations("owners");
+  const tCommon = useTranslations("common");
+
   const stats = {
     totalOwners: mockOwners.length,
     totalProperties: mockOwners.reduce((sum, owner) => sum + owner.properties, 0),
@@ -63,17 +67,17 @@ export default function OwnersPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-serif font-bold text-white mb-2">
-            Property Owners
+            {t("title")}
           </h1>
           <p className="text-gray-400">
-            Manage property owners and their portfolios
+            {t("subtitle")}
           </p>
         </div>
         <Button variant="primary" size="lg">
           <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
           </svg>
-          Add Owner
+          {t("addOwner")}
         </Button>
       </div>
 
@@ -82,7 +86,7 @@ export default function OwnersPage() {
         <div className="card-default p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-400 mb-1">Total Owners</p>
+              <p className="text-sm text-gray-400 mb-1">{t("totalOwners")}</p>
               <p className="text-3xl font-bold text-white">{stats.totalOwners}</p>
             </div>
             <div className="icon-box icon-box-lg icon-box-teal">
@@ -96,7 +100,7 @@ export default function OwnersPage() {
         <div className="card-default p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-400 mb-1">Total Properties</p>
+              <p className="text-sm text-gray-400 mb-1">{t("totalProperties")}</p>
               <p className="text-3xl font-bold text-white">{stats.totalProperties}</p>
             </div>
             <div className="icon-box icon-box-lg icon-box-gold">
@@ -110,7 +114,7 @@ export default function OwnersPage() {
         <div className="card-default p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-400 mb-1">Active Rentals</p>
+              <p className="text-sm text-gray-400 mb-1">{t("activeRentals")}</p>
               <p className="text-3xl font-bold text-white">{stats.activeRentals}</p>
             </div>
             <div className="icon-box icon-box-lg icon-box-green">
@@ -124,7 +128,7 @@ export default function OwnersPage() {
         <div className="card-default p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-400 mb-1">Monthly Revenue</p>
+              <p className="text-sm text-gray-400 mb-1">{t("monthlyRevenue")}</p>
               <p className="text-3xl font-bold text-white">
                 ${stats.monthlyRevenue.toLocaleString()}
               </p>
@@ -141,9 +145,9 @@ export default function OwnersPage() {
       {/* Owners Grid */}
       <div>
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-semibold text-white">All Owners</h2>
+          <h2 className="text-xl font-semibold text-white">{t("allOwners")}</h2>
           <p className="text-sm text-gray-400">
-            {mockOwners.length} total
+            {mockOwners.length} {tCommon("total").toLowerCase()}
           </p>
         </div>
 
@@ -176,11 +180,11 @@ export default function OwnersPage() {
 
                   <div className="grid grid-cols-2 gap-3 mb-4">
                     <div className="bg-gray-800/50 rounded-lg p-3">
-                      <p className="text-xs text-gray-400 mb-0.5">Properties</p>
+                      <p className="text-xs text-gray-400 mb-0.5">{t("properties")}</p>
                       <p className="text-lg font-bold text-teal-400">{owner.properties}</p>
                     </div>
                     <div className="bg-gray-800/50 rounded-lg p-3">
-                      <p className="text-xs text-gray-400 mb-0.5">Revenue/mo</p>
+                      <p className="text-xs text-gray-400 mb-0.5">{t("revenueMo")}</p>
                       <p className="text-lg font-bold text-gold-400">
                         ${(owner.monthlyRevenue / 1000).toFixed(1)}k
                       </p>
@@ -191,7 +195,7 @@ export default function OwnersPage() {
                     href={`/admin/owners/${owner.id}`}
                     className="inline-flex items-center gap-1 text-sm text-teal-400 hover:text-teal-300 transition-colors"
                   >
-                    View Details
+                    {t("viewDetails")}
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                     </svg>

@@ -7,6 +7,7 @@
 
 import React from "react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { Unit } from "@/types";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -17,6 +18,9 @@ interface UnitCardProps {
 }
 
 export function UnitCard({ unit }: UnitCardProps) {
+  const t = useTranslations("units");
+  const tc = useTranslations("common");
+
   const statusVariant = {
     available: "success" as const,
     occupied: "warning" as const,
@@ -25,11 +29,18 @@ export function UnitCard({ unit }: UnitCardProps) {
   };
 
   const typeLabels: Record<string, string> = {
-    apartment: "Apartment",
-    condo: "Condo",
-    villa: "Villa",
-    studio: "Studio",
-    penthouse: "Penthouse",
+    apartment: t("apartment"),
+    condo: t("condo"),
+    villa: t("villa"),
+    studio: t("studio"),
+    penthouse: t("penthouse"),
+  };
+
+  const statusLabels: Record<string, string> = {
+    available: t("available"),
+    occupied: t("occupied"),
+    maintenance: t("maintenance"),
+    unavailable: t("unavailable"),
   };
 
   return (
@@ -47,14 +58,14 @@ export function UnitCard({ unit }: UnitCardProps) {
           </div>
         ) : (
           <div className="w-full h-full flex items-center justify-center bg-gray-700">
-            <span className="text-gray-500 text-sm">No image</span>
+            <span className="text-gray-500 text-sm">{t("noImage")}</span>
           </div>
         )}
 
         {/* Status Badge */}
         <div className="absolute top-3 right-3">
           <Badge variant={statusVariant[unit.status]} size="sm">
-            {unit.status}
+            {statusLabels[unit.status]}
           </Badge>
         </div>
 
@@ -65,7 +76,7 @@ export function UnitCard({ unit }: UnitCardProps) {
               <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
               </svg>
-              Smart
+              {t("smart")}
             </Badge>
           </div>
         )}
@@ -90,17 +101,17 @@ export function UnitCard({ unit }: UnitCardProps) {
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
             </svg>
-            <span>{unit.bedrooms} BD</span>
+            <span>{unit.bedrooms} {t("bd")}</span>
           </div>
           <div className="flex items-center gap-1">
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
             </svg>
-            <span>{unit.bathrooms} BA</span>
+            <span>{unit.bathrooms} {t("ba")}</span>
           </div>
           {unit.floor && (
             <div className="flex items-center gap-1">
-              <span>Floor {unit.floor}</span>
+              <span>{t("floor")} {unit.floor}</span>
             </div>
           )}
         </div>
@@ -111,11 +122,11 @@ export function UnitCard({ unit }: UnitCardProps) {
             <span className="text-2xl font-bold text-teal-400">
               ${unit.pricing.base.toLocaleString()}
             </span>
-            <span className="text-sm text-gray-400">{unit.pricing.currency}/night</span>
+            <span className="text-sm text-gray-400">{unit.pricing.currency}/{t("night")}</span>
           </div>
           {unit.pricing.high_season !== unit.pricing.base && (
             <p className="text-xs text-gray-500 mt-1">
-              High season: ${unit.pricing.high_season.toLocaleString()} {unit.pricing.currency}
+              {t("highSeason")}: ${unit.pricing.high_season.toLocaleString()} {unit.pricing.currency}
             </p>
           )}
         </div>
@@ -124,7 +135,7 @@ export function UnitCard({ unit }: UnitCardProps) {
         <div className="flex gap-2">
           <Link href={`/admin/units/${unit.id}`} className="flex-1">
             <Button variant="outline" size="sm" className="w-full">
-              View Details
+              {t("viewDetails")}
             </Button>
           </Link>
           <Link href={`/admin/units/${unit.id}`}>

@@ -6,6 +6,7 @@
 "use client";
 
 import React from "react";
+import { useTranslations } from "next-intl";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { formatDate, formatCurrency } from "@/lib/utils";
@@ -57,6 +58,11 @@ export function ContractView({
   onMarkAsSigned,
   readOnly = false,
 }: ContractViewProps) {
+  const t = useTranslations("contract");
+  const tBookings = useTranslations("bookings");
+  const tUnits = useTranslations("units");
+  const tPayments = useTranslations("payments");
+
   const checkIn = typeof booking.check_in === "string" ? new Date(booking.check_in) : booking.check_in;
   const checkOut = typeof booking.check_out === "string" ? new Date(booking.check_out) : booking.check_out;
 
@@ -76,9 +82,9 @@ export function ContractView({
       {/* Contract Header */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-2xl">Rental Contract</CardTitle>
+          <CardTitle className="text-2xl">{t("rentalAgreement")}</CardTitle>
           <p className="text-sm text-zinc-400">
-            Long-Term Rental Agreement
+            {tBookings("longTerm")} {t("rentalAgreement")}
           </p>
         </CardHeader>
         <CardContent>
@@ -98,13 +104,13 @@ export function ContractView({
       {/* Parties Section */}
       <Card>
         <CardHeader>
-          <CardTitle>Parties</CardTitle>
+          <CardTitle>{t("parties")}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
             {/* Landlord/Property Manager */}
             <div>
-              <h4 className="text-sm font-semibold text-white mb-2">LANDLORD / PROPERTY MANAGER</h4>
+              <h4 className="text-sm font-semibold text-white mb-2">{t("landlord").toUpperCase()} / PROPERTY MANAGER</h4>
               <div className="text-sm text-zinc-300 space-y-1">
                 <p>NILA Property Management</p>
                 {property && (
@@ -117,12 +123,12 @@ export function ContractView({
 
             {/* Tenant */}
             <div className="pt-4 border-t border-charcoal-700">
-              <h4 className="text-sm font-semibold text-white mb-2">TENANT</h4>
+              <h4 className="text-sm font-semibold text-white mb-2">{t("tenant").toUpperCase()}</h4>
               <div className="text-sm text-zinc-300 space-y-1">
                 <p>{booking.guest.name}</p>
                 <p>Email: {booking.guest.email}</p>
                 <p>Phone: {booking.guest.phone}</p>
-                {booking.guest.nationality && <p>Nationality: {booking.guest.nationality}</p>}
+                {booking.guest.nationality && <p>{tBookings("nationality")}: {booking.guest.nationality}</p>}
               </div>
             </div>
           </div>
@@ -132,12 +138,12 @@ export function ContractView({
       {/* Property Details */}
       <Card>
         <CardHeader>
-          <CardTitle>Property Details</CardTitle>
+          <CardTitle>{t("propertyDetails")}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-2 text-sm">
             <div className="flex justify-between">
-              <span className="text-zinc-400">Property:</span>
+              <span className="text-zinc-400">{tUnits("property")}:</span>
               <span className="text-white">{unit.name}</span>
             </div>
             {unit.unit_number && (
@@ -147,11 +153,11 @@ export function ContractView({
               </div>
             )}
             <div className="flex justify-between">
-              <span className="text-zinc-400">Bedrooms:</span>
+              <span className="text-zinc-400">{tUnits("bedrooms")}:</span>
               <span className="text-white">{unit.bedrooms}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-zinc-400">Bathrooms:</span>
+              <span className="text-zinc-400">{tUnits("bathrooms")}:</span>
               <span className="text-white">{unit.bathrooms}</span>
             </div>
             {property && (
@@ -169,7 +175,7 @@ export function ContractView({
       {/* Rental Terms */}
       <Card>
         <CardHeader>
-          <CardTitle>Rental Terms</CardTitle>
+          <CardTitle>{t("rentalTerms")}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-3">
@@ -178,22 +184,22 @@ export function ContractView({
               <h4 className="text-sm font-semibold text-white mb-2">RENTAL PERIOD</h4>
               <div className="grid grid-cols-2 gap-4 text-sm">
                 <div>
-                  <span className="text-zinc-400">Start Date:</span>
+                  <span className="text-zinc-400">{tBookings("checkIn")}:</span>
                   <span className="ml-2 text-white">{formatDate(checkIn)}</span>
                 </div>
                 <div>
-                  <span className="text-zinc-400">End Date:</span>
+                  <span className="text-zinc-400">{tBookings("checkOut")}:</span>
                   <span className="ml-2 text-white">{formatDate(checkOut)}</span>
                 </div>
               </div>
               <p className="text-sm text-zinc-400 mt-2">
-                Total Duration: {months} month{months !== 1 ? "s" : ""} ({diffDays} days)
+                {tBookings("duration")}: {months} month{months !== 1 ? "s" : ""} ({diffDays} days)
               </p>
             </div>
 
             {/* Rent */}
             <div className="pt-3 border-t border-charcoal-700">
-              <h4 className="text-sm font-semibold text-white mb-2">MONTHLY RENT</h4>
+              <h4 className="text-sm font-semibold text-white mb-2">{tBookings("monthly").toUpperCase()} {tPayments("rent").toUpperCase()}</h4>
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
                   <span className="text-zinc-400">Base Rent:</span>
@@ -220,7 +226,7 @@ export function ContractView({
 
             {/* Security Deposit */}
             <div className="pt-3 border-t border-charcoal-700">
-              <h4 className="text-sm font-semibold text-white mb-2">SECURITY DEPOSIT</h4>
+              <h4 className="text-sm font-semibold text-white mb-2">{tPayments("securityDeposit").toUpperCase()}</h4>
               <p className="text-sm text-zinc-300">
                 A refundable security deposit of{" "}
                 <span className="font-semibold text-white">
@@ -237,7 +243,7 @@ export function ContractView({
       {/* Utilities & Services */}
       <Card>
         <CardHeader>
-          <CardTitle>Utilities & Services</CardTitle>
+          <CardTitle>{tPayments("utilities")} & Services</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-2 text-sm">
@@ -275,7 +281,7 @@ export function ContractView({
       {/* Payment Schedule */}
       <Card>
         <CardHeader>
-          <CardTitle>Payment Schedule</CardTitle>
+          <CardTitle>{t("paymentSchedule")}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-3">
@@ -298,7 +304,7 @@ export function ContractView({
                   </div>
                 )}
                 <div className="flex justify-between">
-                  <span className="text-zinc-400">Security Deposit:</span>
+                  <span className="text-zinc-400">{tPayments("securityDeposit")}:</span>
                   <span className="text-white">
                     {formatCurrency(securityDeposit, booking.pricing.currency)}
                   </span>
@@ -330,7 +336,7 @@ export function ContractView({
       {/* Terms & Conditions */}
       <Card>
         <CardHeader>
-          <CardTitle>Terms & Conditions</CardTitle>
+          <CardTitle>{t("termsConditions")}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-3 text-sm text-zinc-300">
@@ -377,14 +383,14 @@ export function ContractView({
       {/* Signatures */}
       <Card>
         <CardHeader>
-          <CardTitle>Signatures</CardTitle>
+          <CardTitle>{t("signatures")}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-6">
             {/* Landlord Signature */}
             <div>
               <div className="border-b-2 border-charcoal-700 pb-2 mb-2">
-                <p className="text-sm text-zinc-400">Landlord Signature</p>
+                <p className="text-sm text-zinc-400">{t("landlord")} Signature</p>
               </div>
               <div className="text-sm text-zinc-300 space-y-1">
                 <p>NILA Property Management</p>
@@ -395,7 +401,7 @@ export function ContractView({
             {/* Tenant Signature */}
             <div>
               <div className="border-b-2 border-charcoal-700 pb-2 mb-2">
-                <p className="text-sm text-zinc-400">Tenant Signature</p>
+                <p className="text-sm text-zinc-400">{t("tenant")} Signature</p>
               </div>
               <div className="text-sm text-zinc-300 space-y-1">
                 <p>{booking.guest.name}</p>
@@ -413,14 +419,14 @@ export function ContractView({
             variant="ghost"
             onClick={() => window.print()}
           >
-            Print Contract
+            {t("print")}
           </Button>
           {booking.contract_status === "draft" && onMarkAsSent && (
             <Button
               variant="secondary"
               onClick={onMarkAsSent}
             >
-              Mark as Sent
+              {t("markAsSent")}
             </Button>
           )}
           {booking.contract_status === "sent" && onMarkAsSigned && (
@@ -428,7 +434,7 @@ export function ContractView({
               variant="primary"
               onClick={onMarkAsSigned}
             >
-              Mark as Signed
+              {t("markAsSigned")}
             </Button>
           )}
         </div>

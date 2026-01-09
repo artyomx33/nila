@@ -6,18 +6,19 @@
 
 import { MaintenanceRequest } from "@/types";
 import { PriorityBadge } from "./PriorityBadge";
+import { useTranslations } from "next-intl";
 
 interface MaintenanceCardProps {
   maintenance: MaintenanceRequest;
   unitName?: string;
 }
 
-const statusConfig = {
-  reported: { label: "Reported", className: "badge-muted" },
-  scheduled: { label: "Scheduled", className: "badge-teal" },
-  in_progress: { label: "In Progress", className: "badge-warning" },
-  completed: { label: "Completed", className: "badge-success" },
-  cancelled: { label: "Cancelled", className: "badge-error" },
+const statusClassNames = {
+  reported: "badge-muted",
+  scheduled: "badge-teal",
+  in_progress: "badge-warning",
+  completed: "badge-success",
+  cancelled: "badge-error",
 };
 
 const categoryIcons: Record<string, string> = {
@@ -31,9 +32,29 @@ const categoryIcons: Record<string, string> = {
 };
 
 export function MaintenanceCard({ maintenance, unitName }: MaintenanceCardProps) {
-  const statusInfo = statusConfig[maintenance.status];
-  const categoryLabel =
-    maintenance.category.charAt(0).toUpperCase() + maintenance.category.slice(1);
+  const t = useTranslations("operations");
+
+  const statusLabels = {
+    reported: t("reported"),
+    scheduled: t("scheduled"),
+    in_progress: t("inProgress"),
+    completed: t("completed"),
+    cancelled: t("cancelled"),
+  };
+
+  const categoryLabels: Record<string, string> = {
+    plumbing: t("plumbing"),
+    electrical: t("electrical"),
+    hvac: t("hvac"),
+    appliance: t("appliance"),
+    structural: t("structural"),
+    cosmetic: t("cosmetic"),
+    other: t("other"),
+  };
+
+  const statusClassName = statusClassNames[maintenance.status];
+  const statusLabel = statusLabels[maintenance.status];
+  const categoryLabel = categoryLabels[maintenance.category] || maintenance.category;
 
   return (
     <div className="card-default p-4">
@@ -56,9 +77,9 @@ export function MaintenanceCard({ maintenance, unitName }: MaintenanceCardProps)
                 </span>
                 <PriorityBadge priority={maintenance.priority} size="sm" />
                 <span
-                  className={`${statusInfo.className} text-xs px-2 py-0.5 rounded-full`}
+                  className={`${statusClassName} text-xs px-2 py-0.5 rounded-full`}
                 >
-                  {statusInfo.label}
+                  {statusLabel}
                 </span>
               </div>
             </div>
@@ -121,7 +142,7 @@ export function MaintenanceCard({ maintenance, unitName }: MaintenanceCardProps)
                   />
                 </svg>
                 <span>
-                  Scheduled:{" "}
+                  {t("scheduled")}:{" "}
                   {new Date(maintenance.scheduled_date).toLocaleDateString("en-US", {
                     month: "short",
                     day: "numeric",

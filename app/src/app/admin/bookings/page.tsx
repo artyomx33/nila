@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { BookingCard } from "@/components/bookings";
 import { getAllBookings } from "@/lib/db/bookings";
 import { getAllUnits } from "@/lib/db/units";
@@ -9,6 +10,8 @@ import { Booking, BookingStatus, BookingSource } from "@/types";
 
 export default function BookingsPage() {
   const router = useRouter();
+  const t = useTranslations("bookings");
+  const tCommon = useTranslations("common");
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<BookingStatus | "all">("all");
   const [sourceFilter, setSourceFilter] = useState<BookingSource | "all">("all");
@@ -77,9 +80,9 @@ export default function BookingsPage() {
       <div className="mb-6">
         <div className="flex items-center justify-between mb-4">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Reservaciones</h1>
+            <h1 className="text-2xl font-bold text-gray-900">{t("title")}</h1>
             <p className="text-sm text-gray-500 mt-1">
-              Gestión de todas las reservaciones
+              {t("subtitle")}
             </p>
           </div>
 
@@ -87,32 +90,32 @@ export default function BookingsPage() {
             onClick={() => router.push("/admin/calendar")}
             className="px-4 py-2 bg-teal-500 text-white text-sm font-medium rounded-lg hover:bg-teal-600 transition-colors"
           >
-            Ver Calendario
+            {t("viewCalendar")}
           </button>
         </div>
 
         {/* Stats */}
         <div className="grid grid-cols-4 gap-4 mb-6">
           <div className="bg-white border border-gray-200 rounded-lg p-4">
-            <div className="text-sm text-gray-500">Total</div>
+            <div className="text-sm text-gray-500">{tCommon("total")}</div>
             <div className="text-2xl font-bold text-gray-900 mt-1">
               {stats.total}
             </div>
           </div>
           <div className="bg-white border border-yellow-200 rounded-lg p-4">
-            <div className="text-sm text-yellow-600">Pendientes</div>
+            <div className="text-sm text-yellow-600">{t("pending")}</div>
             <div className="text-2xl font-bold text-yellow-700 mt-1">
               {stats.pending}
             </div>
           </div>
           <div className="bg-white border border-teal-200 rounded-lg p-4">
-            <div className="text-sm text-teal-600">Confirmadas</div>
+            <div className="text-sm text-teal-600">{t("confirmed")}</div>
             <div className="text-2xl font-bold text-teal-700 mt-1">
               {stats.confirmed}
             </div>
           </div>
           <div className="bg-white border border-blue-200 rounded-lg p-4">
-            <div className="text-sm text-blue-600">Check-in</div>
+            <div className="text-sm text-blue-600">{t("checkIn")}</div>
             <div className="text-2xl font-bold text-blue-700 mt-1">
               {stats.checked_in}
             </div>
@@ -125,13 +128,13 @@ export default function BookingsPage() {
             {/* Search */}
             <div className="col-span-2">
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Buscar
+                {tCommon("search")}
               </label>
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Nombre, email, unidad..."
+                placeholder={t("searchPlaceholder")}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
               />
             </div>
@@ -139,7 +142,7 @@ export default function BookingsPage() {
             {/* Status filter */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Estado
+                {tCommon("status")}
               </label>
               <select
                 value={statusFilter}
@@ -148,19 +151,19 @@ export default function BookingsPage() {
                 }
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
               >
-                <option value="all">Todos</option>
-                <option value="pending">Pendiente</option>
-                <option value="confirmed">Confirmada</option>
-                <option value="checked_in">Check-in</option>
-                <option value="checked_out">Check-out</option>
-                <option value="cancelled">Cancelada</option>
+                <option value="all">{t("allStatuses")}</option>
+                <option value="pending">{t("pending")}</option>
+                <option value="confirmed">{t("confirmed")}</option>
+                <option value="checked_in">{t("checkedIn")}</option>
+                <option value="checked_out">{t("checkedOut")}</option>
+                <option value="cancelled">{t("cancelled")}</option>
               </select>
             </div>
 
             {/* Source filter */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Fuente
+                {t("source")}
               </label>
               <select
                 value={sourceFilter}
@@ -169,18 +172,18 @@ export default function BookingsPage() {
                 }
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
               >
-                <option value="all">Todas</option>
-                <option value="direct">Directo</option>
-                <option value="airbnb">Airbnb</option>
-                <option value="booking">Booking.com</option>
-                <option value="owner">Propietario</option>
+                <option value="all">{t("allSources")}</option>
+                <option value="direct">{t("direct")}</option>
+                <option value="airbnb">{t("airbnb")}</option>
+                <option value="booking">{t("bookingCom")}</option>
+                <option value="owner">{t("owner")}</option>
               </select>
             </div>
           </div>
 
           {/* Sort */}
           <div className="flex items-center gap-4 mt-4 pt-4 border-t border-gray-200">
-            <span className="text-sm text-gray-700">Ordenar por:</span>
+            <span className="text-sm text-gray-700">{t("sortBy")}:</span>
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setSortBy("check_in")}
@@ -190,7 +193,7 @@ export default function BookingsPage() {
                     : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                 }`}
               >
-                Fecha de llegada
+                {t("arrivalDate")}
               </button>
               <button
                 onClick={() => setSortBy("created_at")}
@@ -200,7 +203,7 @@ export default function BookingsPage() {
                     : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                 }`}
               >
-                Fecha de creación
+                {t("createdDate")}
               </button>
             </div>
           </div>
@@ -210,9 +213,9 @@ export default function BookingsPage() {
       {/* Results */}
       <div className="mb-4">
         <div className="text-sm text-gray-600">
-          {filteredBookings.length} reservacion
-          {filteredBookings.length !== 1 ? "es" : ""} encontrada
-          {filteredBookings.length !== 1 ? "s" : ""}
+          {filteredBookings.length === 1
+            ? t("bookingsFound", { count: filteredBookings.length })
+            : t("bookingsFoundPlural", { count: filteredBookings.length })}
         </div>
       </div>
 
@@ -235,10 +238,10 @@ export default function BookingsPage() {
             </svg>
           </div>
           <h3 className="text-lg font-medium text-gray-900 mb-1">
-            No se encontraron reservaciones
+            {t("noBookings")}
           </h3>
           <p className="text-sm text-gray-500">
-            Intenta ajustar los filtros de búsqueda
+            {t("noBookingsDescription")}
           </p>
         </div>
       ) : (

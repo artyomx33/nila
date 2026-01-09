@@ -2,7 +2,9 @@
 // ADMIN DASHBOARD PAGE
 // Overview with stats, today's activity, and quick actions
 // ============================================
+"use client";
 
+import { useTranslations } from "next-intl";
 import { StatCard, Card, CardHeader, CardTitle, CardContent, Badge, Button } from "@/components/ui";
 import {
   Building2,
@@ -16,6 +18,12 @@ import {
 } from "lucide-react";
 
 export default function AdminDashboard() {
+  const tNav = useTranslations("nav");
+  const tCommon = useTranslations("common");
+  const tReports = useTranslations("reports");
+  const tBookings = useTranslations("bookings");
+  const tUnits = useTranslations("units");
+  const tOperations = useTranslations("operations");
   // TODO: Replace with actual data from stores
   const stats = {
     totalUnits: 8,
@@ -44,7 +52,7 @@ export default function AdminDashboard() {
       {/* Page Header */}
       <div>
         <h1 className="text-3xl font-serif font-bold text-white mb-2">
-          Dashboard
+          {tNav("dashboard")}
         </h1>
         <p className="text-zinc-400">
           Welcome back! Here's what's happening today.
@@ -55,27 +63,27 @@ export default function AdminDashboard() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard
           icon={<Building2 className="w-6 h-6" />}
-          label="Total Units"
+          label={`${tCommon("total")} ${tNav("units")}`}
           value={stats.totalUnits}
           variant="teal"
         />
         <StatCard
           icon={<Calendar className="w-6 h-6" />}
-          label="Active Bookings"
+          label={`Active ${tNav("bookings")}`}
           value={stats.activeBookings}
           trend={{ value: 12, positive: true }}
           variant="gold"
         />
         <StatCard
           icon={<TrendingUp className="w-6 h-6" />}
-          label="This Month Revenue"
+          label={`${tReports("thisMonth")} ${tReports("revenue")}`}
           value={`$${(stats.monthlyRevenue / 1000).toFixed(0)}K`}
           trend={{ value: 8, positive: true }}
           variant="green"
         />
         <StatCard
           icon={<Percent className="w-6 h-6" />}
-          label="Occupancy Rate"
+          label={`${tReports("occupancy")} Rate`}
           value={`${stats.occupancyRate}%`}
           trend={{ value: 5, positive: true }}
           variant="teal"
@@ -87,7 +95,7 @@ export default function AdminDashboard() {
         {/* Check-ins & Check-outs */}
         <Card variant="glass">
           <CardHeader>
-            <CardTitle>Today's Activity</CardTitle>
+            <CardTitle>{tOperations("today")}'s Activity</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
@@ -98,7 +106,7 @@ export default function AdminDashboard() {
                     <ArrowRight className="w-4 h-4 rotate-180" />
                   </div>
                   <h4 className="text-sm font-semibold text-white">
-                    Check-ins ({todayActivity.checkIns.length})
+                    {tBookings("checkIn")}s ({todayActivity.checkIns.length})
                   </h4>
                 </div>
                 <div className="space-y-2">
@@ -128,7 +136,7 @@ export default function AdminDashboard() {
                     <ArrowRight className="w-4 h-4" />
                   </div>
                   <h4 className="text-sm font-semibold text-white">
-                    Check-outs ({todayActivity.checkOuts.length})
+                    {tBookings("checkOut")}s ({todayActivity.checkOuts.length})
                   </h4>
                 </div>
                 <div className="space-y-2">
@@ -158,7 +166,7 @@ export default function AdminDashboard() {
         <Card variant="glass">
           <CardHeader>
             <div className="flex items-center justify-between">
-              <CardTitle>Today's Cleanings</CardTitle>
+              <CardTitle>{tOperations("today")}'s {tOperations("cleaning")}</CardTitle>
               <Badge variant="muted" size="sm">
                 {todayActivity.cleanings.length} tasks
               </Badge>
@@ -168,9 +176,9 @@ export default function AdminDashboard() {
             <div className="space-y-2">
               {todayActivity.cleanings.map((cleaning) => {
                 const statusConfig = {
-                  pending: { icon: Clock, variant: "muted" as const, label: "Pending" },
-                  in_progress: { icon: Sparkles, variant: "warning" as const, label: "In Progress" },
-                  completed: { icon: Check, variant: "success" as const, label: "Completed" },
+                  pending: { icon: Clock, variant: "muted" as const, label: tBookings("pending") },
+                  in_progress: { icon: Sparkles, variant: "warning" as const, label: tOperations("inProgress") },
+                  completed: { icon: Check, variant: "success" as const, label: tOperations("completed") },
                 };
                 const config = statusConfig[cleaning.status as keyof typeof statusConfig];
                 const StatusIcon = config.icon;
@@ -213,25 +221,25 @@ export default function AdminDashboard() {
       {/* Quick Actions */}
       <Card variant="glass">
         <CardHeader>
-          <CardTitle>Quick Actions</CardTitle>
+          <CardTitle>Quick {tCommon("actions")}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
             <Button variant="primary" size="md" className="w-full">
               <Calendar className="w-4 h-4" />
-              New Booking
+              {tBookings("newBooking")}
             </Button>
             <Button variant="secondary" size="md" className="w-full">
               <Sparkles className="w-4 h-4" />
-              Assign Cleaning
+              {tOperations("assignTo")} {tOperations("cleaning")}
             </Button>
             <Button variant="secondary" size="md" className="w-full">
               <Building2 className="w-4 h-4" />
-              Add Unit
+              {tUnits("addUnit")}
             </Button>
             <Button variant="outline" size="md" className="w-full">
               <TrendingUp className="w-4 h-4" />
-              View Reports
+              {tCommon("view")} {tNav("reports")}
             </Button>
           </div>
         </CardContent>

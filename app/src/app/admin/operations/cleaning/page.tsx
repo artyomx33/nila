@@ -8,10 +8,14 @@ import { useState } from "react";
 import { getCleanings, getTodayCleanings, getUpcomingCleanings } from "@/lib/db/cleanings";
 import { CleaningCard } from "@/components/operations/CleaningCard";
 import { CleaningStatus, CleaningType } from "@/types";
+import { useTranslations } from "next-intl";
 
 type FilterView = "today" | "week" | "upcoming" | "all";
 
 export default function CleaningSchedulePage() {
+  const t = useTranslations("operations");
+  const tCommon = useTranslations("common");
+
   const [filterView, setFilterView] = useState<FilterView>("today");
   const [statusFilter, setStatusFilter] = useState<CleaningStatus | "all">("all");
   const [typeFilter, setTypeFilter] = useState<CleaningType | "all">("all");
@@ -51,27 +55,27 @@ export default function CleaningSchedulePage() {
   }, {} as Record<string, typeof cleanings>);
 
   const viewTabs: { id: FilterView; label: string }[] = [
-    { id: "today", label: "Today" },
-    { id: "week", label: "This Week" },
-    { id: "upcoming", label: "Upcoming" },
-    { id: "all", label: "All" },
+    { id: "today", label: t("today") },
+    { id: "week", label: t("thisWeek") },
+    { id: "upcoming", label: t("upcoming") },
+    { id: "all", label: t("all") },
   ];
 
   const statusOptions: { value: CleaningStatus | "all"; label: string }[] = [
-    { value: "all", label: "All Status" },
-    { value: "pending", label: "Pending" },
-    { value: "assigned", label: "Assigned" },
-    { value: "in_progress", label: "In Progress" },
-    { value: "completed", label: "Completed" },
-    { value: "verified", label: "Verified" },
+    { value: "all", label: t("allStatus") },
+    { value: "pending", label: t("pending") },
+    { value: "assigned", label: t("assigned") },
+    { value: "in_progress", label: t("inProgress") },
+    { value: "completed", label: t("completed") },
+    { value: "verified", label: t("verified") },
   ];
 
   const typeOptions: { value: CleaningType | "all"; label: string }[] = [
-    { value: "all", label: "All Types" },
-    { value: "turnover", label: "Turnover" },
-    { value: "deep", label: "Deep Clean" },
-    { value: "maintenance", label: "Maintenance" },
-    { value: "inspection", label: "Inspection" },
+    { value: "all", label: t("allTypes") },
+    { value: "turnover", label: t("turnover") },
+    { value: "deep", label: t("deepClean") },
+    { value: "maintenance", label: t("maintenance") },
+    { value: "inspection", label: t("inspection") },
   ];
 
   return (
@@ -80,14 +84,14 @@ export default function CleaningSchedulePage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-serif font-bold text-white mb-2">
-            Cleaning Schedule
+            {t("cleaningSchedule")}
           </h1>
           <p className="text-gray-400">
-            Manage and track all cleaning tasks
+            {t("manageCleanings")}
           </p>
         </div>
         <button className="btn-primary px-6 py-3 rounded-lg font-medium">
-          + Schedule Cleaning
+          + {t("scheduleCleaning")}
         </button>
       </div>
 
@@ -112,7 +116,7 @@ export default function CleaningSchedulePage() {
       <div className="card-default p-4">
         <div className="flex flex-col sm:flex-row gap-3">
           <div className="flex-1">
-            <label className="block text-sm text-gray-400 mb-2">Status</label>
+            <label className="block text-sm text-gray-400 mb-2">{t("status")}</label>
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value as any)}
@@ -127,7 +131,7 @@ export default function CleaningSchedulePage() {
           </div>
 
           <div className="flex-1">
-            <label className="block text-sm text-gray-400 mb-2">Type</label>
+            <label className="block text-sm text-gray-400 mb-2">{t("type")}</label>
             <select
               value={typeFilter}
               onChange={(e) => setTypeFilter(e.target.value as any)}
@@ -142,10 +146,10 @@ export default function CleaningSchedulePage() {
           </div>
 
           <div className="flex-1">
-            <label className="block text-sm text-gray-400 mb-2">Search</label>
+            <label className="block text-sm text-gray-400 mb-2">{tCommon("search")}</label>
             <input
               type="text"
-              placeholder="Search by unit or cleaner..."
+              placeholder={t("searchByUnitCleaner")}
               className="w-full input-themed px-4 py-2 rounded-lg"
             />
           </div>
@@ -156,22 +160,22 @@ export default function CleaningSchedulePage() {
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         {[
           {
-            label: "Total",
+            label: tCommon("total"),
             value: cleanings.length,
             color: "text-white",
           },
           {
-            label: "Pending",
+            label: t("pending"),
             value: cleanings.filter((c) => c.status === "pending").length,
             color: "text-gray-400",
           },
           {
-            label: "In Progress",
+            label: t("inProgress"),
             value: cleanings.filter((c) => c.status === "in_progress").length,
             color: "text-amber-400",
           },
           {
-            label: "Completed",
+            label: t("completed"),
             value: cleanings.filter((c) => c.status === "completed" || c.status === "verified").length,
             color: "text-teal-400",
           },
@@ -188,10 +192,10 @@ export default function CleaningSchedulePage() {
         <div className="card-default p-12 text-center">
           <div className="text-6xl mb-4">🧹</div>
           <h3 className="text-xl font-semibold text-white mb-2">
-            No cleanings found
+            {t("noCleaningsFound")}
           </h3>
           <p className="text-gray-400 mb-6">
-            No cleanings match your current filters
+            {t("noCleaningsMatch")}
           </p>
           <button
             onClick={() => {
@@ -201,7 +205,7 @@ export default function CleaningSchedulePage() {
             }}
             className="btn-primary px-6 py-2 rounded-lg"
           >
-            Reset Filters
+            {t("resetFilters")}
           </button>
         </div>
       ) : (
@@ -217,9 +221,9 @@ export default function CleaningSchedulePage() {
                 <div className="flex items-center gap-3 mb-3">
                   <h2 className="text-lg font-semibold text-white">
                     {isToday
-                      ? "Today"
+                      ? t("today")
                       : isTomorrow
-                      ? "Tomorrow"
+                      ? t("tomorrow")
                       : dateObj.toLocaleDateString("en-US", {
                           weekday: "long",
                           month: "long",
@@ -228,7 +232,7 @@ export default function CleaningSchedulePage() {
                   </h2>
                   <div className="flex-1 h-px bg-gray-700" />
                   <span className="badge-muted text-xs px-2 py-1 rounded-full">
-                    {dateCleanings.length} {dateCleanings.length === 1 ? "cleaning" : "cleanings"}
+                    {dateCleanings.length} {dateCleanings.length === 1 ? t("cleaning") : t("cleanings")}
                   </span>
                 </div>
 
@@ -237,7 +241,7 @@ export default function CleaningSchedulePage() {
                     <CleaningCard
                       key={cleaning.id}
                       cleaning={cleaning}
-                      unitName={`Unit ${cleaning.unit_id.split("-")[1]}`}
+                      unitName={`${t("unit")} ${cleaning.unit_id.split("-")[1]}`}
                       cleanerName={
                         cleaning.cleaner_id
                           ? `Cleaner ${cleaning.cleaner_id.split("-")[1]}`

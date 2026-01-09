@@ -8,8 +8,12 @@ import { useState } from "react";
 import { getCleaners } from "@/lib/db/cleaners";
 import { StaffCard } from "@/components/operations/StaffCard";
 import { CleanerStatus } from "@/types";
+import { useTranslations } from "next-intl";
 
 export default function StaffPage() {
+  const t = useTranslations("operations");
+  const tCommon = useTranslations("common");
+
   const [statusFilter, setStatusFilter] = useState<CleanerStatus | "all">("all");
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -41,10 +45,10 @@ export default function StaffPage() {
   });
 
   const statusOptions: { value: CleanerStatus | "all"; label: string }[] = [
-    { value: "all", label: "All Staff" },
-    { value: "active", label: "Active" },
-    { value: "inactive", label: "Inactive" },
-    { value: "on_leave", label: "On Leave" },
+    { value: "all", label: t("allStatus") },
+    { value: "active", label: t("active") },
+    { value: "inactive", label: t("inactive") },
+    { value: "on_leave", label: t("onLeave") },
   ];
 
   const activeStaff = cleaners.filter((c) => c.status === "active");
@@ -66,14 +70,14 @@ export default function StaffPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-serif font-bold text-white mb-2">
-            Staff Management
+            {t("staffManagement")}
           </h1>
           <p className="text-gray-400">
-            Manage cleaning staff and assignments
+            {t("manageStaffDescription")}
           </p>
         </div>
         <button className="btn-primary px-6 py-3 rounded-lg font-medium">
-          + Add Staff Member
+          + {t("addStaffMember")}
         </button>
       </div>
 
@@ -81,22 +85,22 @@ export default function StaffPage() {
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         {[
           {
-            label: "Total Staff",
+            label: t("totalStaff"),
             value: cleaners.length,
             color: "text-white",
           },
           {
-            label: "Active",
+            label: t("active"),
             value: activeStaff.length,
             color: "text-teal-400",
           },
           {
-            label: "Active Assignments",
+            label: t("activeAssignments"),
             value: totalAssignments,
             color: "text-amber-400",
           },
           {
-            label: "Avg Rating",
+            label: t("avgRating"),
             value: avgRating,
             color: "text-gold-400",
           },
@@ -112,7 +116,7 @@ export default function StaffPage() {
       <div className="card-default p-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
-            <label className="block text-sm text-gray-400 mb-2">Status</label>
+            <label className="block text-sm text-gray-400 mb-2">{t("status")}</label>
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value as any)}
@@ -127,10 +131,10 @@ export default function StaffPage() {
           </div>
 
           <div>
-            <label className="block text-sm text-gray-400 mb-2">Search</label>
+            <label className="block text-sm text-gray-400 mb-2">{tCommon("search")}</label>
             <input
               type="text"
-              placeholder="Search by name, phone, or email..."
+              placeholder={t("searchByNamePhoneEmail")}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full input-themed px-4 py-2 rounded-lg"
@@ -144,12 +148,12 @@ export default function StaffPage() {
         <div className="card-default p-12 text-center">
           <div className="text-6xl mb-4">👥</div>
           <h3 className="text-xl font-semibold text-white mb-2">
-            No staff members found
+            {t("noStaffFound")}
           </h3>
           <p className="text-gray-400 mb-6">
             {searchQuery || statusFilter !== "all"
-              ? "No staff match your current filters"
-              : "Add your first staff member to get started"}
+              ? t("noStaffMatch")
+              : t("addFirstStaff")}
           </p>
           <button
             onClick={() => {
@@ -158,7 +162,7 @@ export default function StaffPage() {
             }}
             className="btn-primary px-6 py-2 rounded-lg"
           >
-            {searchQuery || statusFilter !== "all" ? "Reset Filters" : "Add Staff Member"}
+            {searchQuery || statusFilter !== "all" ? t("resetFilters") : t("addStaffMember")}
           </button>
         </div>
       ) : (
@@ -167,10 +171,10 @@ export default function StaffPage() {
           {cleaners.filter((c) => c.status === "active").length > 0 && (
             <div>
               <div className="flex items-center gap-2 mb-3">
-                <h2 className="text-lg font-semibold text-white">Active Staff</h2>
+                <h2 className="text-lg font-semibold text-white">{t("activeStaff")}</h2>
                 <div className="flex-1 h-px bg-gray-700" />
                 <span className="badge-teal text-xs px-2 py-1 rounded-full">
-                  {cleaners.filter((c) => c.status === "active").length} members
+                  {cleaners.filter((c) => c.status === "active").length} {t("members")}
                 </span>
               </div>
               <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
@@ -187,10 +191,10 @@ export default function StaffPage() {
           {cleaners.filter((c) => c.status === "on_leave").length > 0 && (
             <div>
               <div className="flex items-center gap-2 mb-3">
-                <h2 className="text-lg font-semibold text-white">On Leave</h2>
+                <h2 className="text-lg font-semibold text-white">{t("onLeave")}</h2>
                 <div className="flex-1 h-px bg-gray-700" />
                 <span className="badge-warning text-xs px-2 py-1 rounded-full">
-                  {cleaners.filter((c) => c.status === "on_leave").length} members
+                  {cleaners.filter((c) => c.status === "on_leave").length} {t("members")}
                 </span>
               </div>
               <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
@@ -207,10 +211,10 @@ export default function StaffPage() {
           {cleaners.filter((c) => c.status === "inactive").length > 0 && (
             <div>
               <div className="flex items-center gap-2 mb-3">
-                <h2 className="text-lg font-semibold text-white">Inactive</h2>
+                <h2 className="text-lg font-semibold text-white">{t("inactive")}</h2>
                 <div className="flex-1 h-px bg-gray-700" />
                 <span className="badge-muted text-xs px-2 py-1 rounded-full">
-                  {cleaners.filter((c) => c.status === "inactive").length} members
+                  {cleaners.filter((c) => c.status === "inactive").length} {t("members")}
                 </span>
               </div>
               <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">

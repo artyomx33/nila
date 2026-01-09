@@ -1,3 +1,5 @@
+"use client";
+
 // ============================================
 // OWNER DASHBOARD PAGE
 // Property owner view with revenue and bookings
@@ -12,8 +14,11 @@ import {
   Eye,
   ArrowRight,
 } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 export default function OwnerDashboard() {
+  const t = useTranslations("ownerPortal");
+
   // TODO: Replace with actual owner data from stores
   const ownerProperties = [
     { id: "1", name: "Casa Azul", type: "Apartment", status: "occupied" },
@@ -52,10 +57,10 @@ export default function OwnerDashboard() {
       {/* Page Header */}
       <div>
         <h1 className="text-3xl font-serif font-bold text-white mb-2">
-          Welcome back, Owner!
+          {t("welcomeBack", { name: "Owner" })}
         </h1>
         <p className="text-zinc-400">
-          Here's an overview of your properties and earnings.
+          {t("overviewDescription")}
         </p>
       </div>
 
@@ -63,19 +68,19 @@ export default function OwnerDashboard() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard
           icon={<Building2 className="w-6 h-6" />}
-          label="Your Properties"
+          label={t("yourProperties")}
           value={ownerProperties.length}
           variant="teal"
         />
         <StatCard
           icon={<Calendar className="w-6 h-6" />}
-          label="Upcoming Bookings"
+          label={t("upcomingBookings")}
           value={upcomingBookings.length}
           variant="gold"
         />
         <StatCard
           icon={<DollarSign className="w-6 h-6" />}
-          label="This Month"
+          label={t("thisMonth")}
           value={`$${(revenueData.thisMonth / 1000).toFixed(1)}K`}
           trend={{
             value: Math.round(((revenueData.thisMonth - revenueData.lastMonth) / revenueData.lastMonth) * 100),
@@ -85,7 +90,7 @@ export default function OwnerDashboard() {
         />
         <StatCard
           icon={<TrendingUp className="w-6 h-6" />}
-          label="Year to Date"
+          label={t("yearToDate")}
           value={`$${(revenueData.ytd / 1000).toFixed(0)}K`}
           variant="teal"
         />
@@ -97,9 +102,9 @@ export default function OwnerDashboard() {
         <Card variant="glass">
           <CardHeader>
             <div className="flex items-center justify-between">
-              <CardTitle>Your Properties</CardTitle>
+              <CardTitle>{t("yourProperties")}</CardTitle>
               <Button variant="ghost" size="sm">
-                View All
+                {t("viewAll")}
                 <ArrowRight className="w-4 h-4" />
               </Button>
             </div>
@@ -126,7 +131,7 @@ export default function OwnerDashboard() {
                     variant={property.status === "occupied" ? "teal" : "success"}
                     size="sm"
                   >
-                    {property.status === "occupied" ? "Occupied" : "Available"}
+                    {property.status === "occupied" ? t("occupied") : t("available")}
                   </Badge>
                 </div>
               ))}
@@ -138,9 +143,9 @@ export default function OwnerDashboard() {
         <Card variant="glass">
           <CardHeader>
             <div className="flex items-center justify-between">
-              <CardTitle>Upcoming Bookings</CardTitle>
+              <CardTitle>{t("upcomingBookings")}</CardTitle>
               <Badge variant="muted" size="sm">
-                {upcomingBookings.length} bookings
+                {t("bookings", { count: upcomingBookings.length })}
               </Badge>
             </div>
           </CardHeader>
@@ -159,7 +164,7 @@ export default function OwnerDashboard() {
                       <p className="text-xs text-zinc-500">{booking.property}</p>
                     </div>
                     <Badge variant="teal" size="sm">
-                      {booking.nights} nights
+                      {t("nights", { count: booking.nights })}
                     </Badge>
                   </div>
                   <div className="flex items-center justify-between text-xs">
@@ -180,24 +185,24 @@ export default function OwnerDashboard() {
       {/* Revenue Summary */}
       <Card variant="glass">
         <CardHeader>
-          <CardTitle>Revenue Summary</CardTitle>
+          <CardTitle>{t("revenueSummary")}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="text-center p-4 rounded-lg bg-charcoal-900/50">
-              <p className="text-sm text-zinc-400 mb-2">This Month</p>
+              <p className="text-sm text-zinc-400 mb-2">{t("thisMonth")}</p>
               <p className="text-2xl font-bold text-white">
                 ${revenueData.thisMonth.toLocaleString()}
               </p>
             </div>
             <div className="text-center p-4 rounded-lg bg-charcoal-900/50">
-              <p className="text-sm text-zinc-400 mb-2">Last Month</p>
+              <p className="text-sm text-zinc-400 mb-2">{t("lastMonth")}</p>
               <p className="text-2xl font-bold text-white">
                 ${revenueData.lastMonth.toLocaleString()}
               </p>
             </div>
             <div className="text-center p-4 rounded-lg bg-teal-600/10 border border-teal-600/30">
-              <p className="text-sm text-teal-400 mb-2">Year to Date</p>
+              <p className="text-sm text-teal-400 mb-2">{t("yearToDate")}</p>
               <p className="text-2xl font-bold text-teal-400">
                 ${revenueData.ytd.toLocaleString()}
               </p>
@@ -209,21 +214,21 @@ export default function OwnerDashboard() {
       {/* Quick Actions */}
       <Card variant="glass">
         <CardHeader>
-          <CardTitle>Quick Actions</CardTitle>
+          <CardTitle>{t("quickActions")}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <Button variant="primary" size="md" className="w-full">
               <Eye className="w-4 h-4" />
-              View All Bookings
+              {t("viewAllBookings")}
             </Button>
             <Button variant="secondary" size="md" className="w-full">
               <DollarSign className="w-4 h-4" />
-              Financial Reports
+              {t("financialReports")}
             </Button>
             <Button variant="outline" size="md" className="w-full">
               <Building2 className="w-4 h-4" />
-              Manage Properties
+              {t("manageProperties")}
             </Button>
           </div>
         </CardContent>

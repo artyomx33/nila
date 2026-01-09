@@ -445,6 +445,8 @@ export async function createPayment(paymentData: NilaPaymentInsert) {
 }
 
 export async function getPaymentsByType(bookingId: string, paymentType: NilaPayment['payment_type']) {
+  if (!paymentType) return [];
+
   const { data, error } = await supabase
     .from('nila_payments')
     .select('*')

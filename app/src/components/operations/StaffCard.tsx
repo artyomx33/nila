@@ -6,19 +6,29 @@
 
 import { Cleaner } from "@/types";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 interface StaffCardProps {
   cleaner: Cleaner;
 }
 
-const statusConfig = {
-  active: { label: "Active", className: "badge-success" },
-  inactive: { label: "Inactive", className: "badge-muted" },
-  on_leave: { label: "On Leave", className: "badge-warning" },
+const statusClassNames = {
+  active: "badge-success",
+  inactive: "badge-muted",
+  on_leave: "badge-warning",
 };
 
 export function StaffCard({ cleaner }: StaffCardProps) {
-  const statusInfo = statusConfig[cleaner.status];
+  const t = useTranslations("operations");
+
+  const statusLabels = {
+    active: t("active"),
+    inactive: t("inactive"),
+    on_leave: t("onLeave"),
+  };
+
+  const statusClassName = statusClassNames[cleaner.status];
+  const statusLabel = statusLabels[cleaner.status];
   const initials = cleaner.name
     .split(" ")
     .map((n) => n[0])
@@ -42,9 +52,9 @@ export function StaffCard({ cleaner }: StaffCardProps) {
                 {cleaner.name}
               </h3>
               <span
-                className={`${statusInfo.className} text-xs px-2 py-0.5 rounded-full whitespace-nowrap`}
+                className={`${statusClassName} text-xs px-2 py-0.5 rounded-full whitespace-nowrap`}
               >
-                {statusInfo.label}
+                {statusLabel}
               </span>
             </div>
 
@@ -89,20 +99,20 @@ export function StaffCard({ cleaner }: StaffCardProps) {
             {/* Stats */}
             <div className="flex items-center gap-4 mt-3 pt-3 border-t border-gray-700">
               <div>
-                <div className="text-xs text-gray-500">Active</div>
+                <div className="text-xs text-gray-500">{t("active")}</div>
                 <div className="text-lg font-semibold text-teal-400">
                   {cleaner.assigned_cleanings || 0}
                 </div>
               </div>
               <div>
-                <div className="text-xs text-gray-500">Completed</div>
+                <div className="text-xs text-gray-500">{t("completed")}</div>
                 <div className="text-lg font-semibold text-white">
                   {cleaner.completed_cleanings || 0}
                 </div>
               </div>
               {cleaner.rating && (
                 <div>
-                  <div className="text-xs text-gray-500">Rating</div>
+                  <div className="text-xs text-gray-500">{t("rating")}</div>
                   <div className="text-lg font-semibold text-amber-400 flex items-center gap-1">
                     {cleaner.rating}
                     <svg

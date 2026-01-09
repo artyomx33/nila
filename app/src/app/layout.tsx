@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { DM_Sans, DM_Serif_Display } from "next/font/google";
+import { getLocale, getMessages } from 'next-intl/server';
+import { IntlProvider } from "@/components/providers/intl-provider";
 import "./globals.css";
 
 const dmSans = DM_Sans({
@@ -23,14 +25,21 @@ export const metadata: Metadata = {
   description: "Property management platform for NILA Estate Management - Riviera Maya",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const locale = await getLocale();
+  const messages = await getMessages();
+
   return (
-    <html lang="en" className={`${dmSans.variable} ${dmSerif.variable}`}>
-      <body className="font-sans antialiased">{children}</body>
+    <html lang={locale} className={`${dmSans.variable} ${dmSerif.variable}`}>
+      <body className="font-sans antialiased">
+        <IntlProvider locale={locale} messages={messages}>
+          {children}
+        </IntlProvider>
+      </body>
     </html>
   );
 }

@@ -1,8 +1,12 @@
-export default function BookerLayout({
+import { getTranslations } from "next-intl/server";
+
+export default async function BookerLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const t = await getTranslations("booker");
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-teal-50 via-white to-blue-50">
       {/* Simple Header */}
@@ -15,11 +19,11 @@ export default function BookerLayout({
               </div>
               <div className="ml-3">
                 <h1 className="text-xl font-bold text-gray-900">NILA Estate</h1>
-                <p className="text-xs text-gray-500">Bacalar, México</p>
+                <p className="text-xs text-gray-500">{t("location")}</p>
               </div>
             </div>
             <div className="text-sm text-gray-600">
-              Portal de Reservaciones
+              {t("portalTitle")}
             </div>
           </div>
         </div>
@@ -34,7 +38,7 @@ export default function BookerLayout({
       <footer className="bg-white border-t border-gray-200 mt-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="text-center text-sm text-gray-500">
-            <p>&copy; 2026 NILA Estate Management. Todos los derechos reservados.</p>
+            <p>&copy; {t("copyright")}</p>
           </div>
         </div>
       </footer>

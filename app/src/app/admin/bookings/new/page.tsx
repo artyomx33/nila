@@ -3,17 +3,20 @@
 // Create a new booking
 // ============================================
 
+import { getTranslations } from "next-intl/server";
 import { BookingForm } from "@/components/bookings/BookingForm";
 
-export default function NewBookingPage() {
+export default async function NewBookingPage() {
+  const t = await getTranslations("bookings");
+
   return (
     <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-serif font-bold text-white mb-2">
-          Create New Booking
+          {t("createNewBooking")}
         </h1>
         <p className="text-gray-400">
-          Add a new booking to the system
+          {t("addNewBookingDescription")}
         </p>
       </div>
 
