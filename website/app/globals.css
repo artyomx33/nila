@@ -1,0 +1,43 @@
+@import "tailwindcss";
+
+@layer components {
+  .section-wrapper {
+    @apply w-full overflow-hidden;
+  }
+
+  .section-inner {
+    @apply max-w-6xl mx-auto px-4 lg:px-8 py-12 lg:py-20;
+  }
+
+  .button-primary {
+    @apply inline-flex items-center justify-center px-6 py-3 bg-black text-white text-sm font-medium rounded-[4px] shadow-sm transition-all duration-300 hover:shadow-lg;
+  }
+
+  .button-secondary {
+    @apply inline-flex items-center justify-center px-6 py-3 bg-transparent border-2 border-black text-black text-sm font-medium rounded-[4px] transition-all duration-300;
+  }
+
+  .heading-xl {
+    @apply text-4xl lg:text-6xl font-bold leading-[120%];
+  }
+
+  .heading-lg {
+    @apply text-3xl lg:text-4xl font-bold leading-[120%];
+  }
+
+  .heading-md {
+    @apply text-2xl lg:text-3xl font-semibold leading-[120%];
+  }
+
+  .subtext-md {
+    @apply text-lg lg:text-xl text-gray-700 leading-relaxed;
+  }
+
+  .card-service {
+    @apply bg-white border border-gray-200 rounded-[8px] p-6 hover:shadow-lg transition-shadow duration-300;
+  }
+
+  .testimonial-card {
+    @apply bg-white border border-gray-200 rounded-[8px] p-6;
+  }
+}

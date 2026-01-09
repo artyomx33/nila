@@ -1,0 +1,31 @@
+// NILA Home Page Components
+export { HomeHero } from "./HomeHero";
+export { StatsSection } from "./StatsSection";
+export { ServicesOverview } from "./ServicesOverview";
+export { WhyNILA } from "./WhyNILA";
+export { TeamSection } from "./TeamSection";
+export { HomeCTA } from "./HomeCTA";
+
+// Legacy components (to be replaced)
+export { HeroSection } from "./HeroSection";
+export { IntroSection } from "./IntroSection";
+export { ServicesGrid } from "./ServicesGrid";
+export { FleetTeaser } from "./FleetTeaser";
+export { TestimonialSlider } from "./TestimonialSlider";
+export { CallToAction } from "./CallToAction";
+export { ServiceSection } from "./ServiceSection";
+export { FleetHero } from "./FleetHero";
+export { FleetBenefits } from "./FleetBenefits";
+export { FleetPartnership } from "./FleetPartnership";
+export { FleetServices } from "./FleetServices";
+export { FleetPricing } from "./FleetPricing";
+export { FleetCTA } from "./FleetCTA";
+export { AboutHero } from "./AboutHero";
+export { SpasProfile } from "./SpasProfile";
+export { TeddyEcosystem } from "./TeddyEcosystem";
+export { AboutIntro } from "./AboutIntro";
+export { AboutCTA } from "./AboutCTA";
+export { ContactHero } from "./ContactHero";
+export { ContactInfo } from "./ContactInfo";
+export { ContactForm } from "./ContactForm";
+export { TeddyverseFooter } from "./TeddyverseFooter";

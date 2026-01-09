@@ -1,0 +1,538 @@
+@import "tailwindcss";
+
+/* ============================================
+   NILA ESTATE MANAGEMENT - Premium Dark Theme
+   Inspired by Bacalar Lagoon & CafeTabs DNA
+   ============================================ */
+
+:root {
+  /* Background & Foreground */
+  --background: #0D0D0F;
+  --foreground: #FFFFFF;
+
+  /* Primary (Teal - Bacalar lagoon) */
+  --primary: #0D9488;
+  --primary-foreground: #FFFFFF;
+
+  /* Secondary (Gold - sunset accent) */
+  --secondary: #F59E0B;
+  --secondary-foreground: #0D0D0F;
+
+  /* Accent (Teal) */
+  --accent: #0D9488;
+  --accent-foreground: #FFFFFF;
+
+  /* Cards */
+  --card: rgba(39, 39, 42, 0.6);
+  --card-foreground: #FFFFFF;
+  --card-border: rgba(63, 63, 68, 0.5);
+
+  /* Muted */
+  --muted: #18181B;
+  --muted-foreground: #A1A1AA;
+
+  /* Input */
+  --input-bg: #18181B;
+  --input-border: #3F3F46;
+
+  /* Sidebar */
+  --sidebar: rgba(24, 24, 27, 0.8);
+  --sidebar-foreground: #FFFFFF;
+  --sidebar-border: rgba(63, 63, 68, 0.5);
+  --sidebar-hover: rgba(39, 39, 42, 0.5);
+
+  /* Charcoal Palette */
+  --charcoal-950: #0D0D0F;
+  --charcoal-900: #18181B;
+  --charcoal-800: #27272A;
+  --charcoal-700: #3F3F46;
+  --charcoal-600: #52525B;
+  --charcoal-500: #71717A;
+
+  /* Teal Palette (NILA Primary) */
+  --teal-50: #F0FDFA;
+  --teal-100: #CCFBF1;
+  --teal-200: #99F6E4;
+  --teal-300: #5EEAD4;
+  --teal-400: #2DD4BF;
+  --teal-500: #14B8A6;
+  --teal-600: #0D9488;
+  --teal-700: #0F766E;
+  --teal-800: #115E59;
+  --teal-900: #134E4A;
+
+  /* Gold Palette (Accent) */
+  --gold-50: #FFFBEB;
+  --gold-100: #FEF3C7;
+  --gold-200: #FDE68A;
+  --gold-300: #FCD34D;
+  --gold-400: #FBBF24;
+  --gold-500: #F59E0B;
+  --gold-600: #D97706;
+
+  /* Success/Error/Warning */
+  --success: #22C55E;
+  --error: #EF4444;
+  --warning: #F59E0B;
+  --info: #0EA5E9;
+
+  /* Border */
+  --border: rgba(63, 63, 68, 0.5);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: "DM Sans", system-ui, sans-serif;
+  --font-serif: "DM Serif Display", Georgia, serif;
+}
+
+/* ============================================
+   BASE STYLES
+   ============================================ */
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+}
+
+/* Serif headings */
+h1, h2, h3, .font-serif {
+  font-family: var(--font-serif);
+}
+
+/* ============================================
+   GLASS MORPHISM
+   ============================================ */
+
+.glass {
+  background-color: rgba(39, 39, 42, 0.5);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(63, 63, 68, 0.5);
+}
+
+.glass-subtle {
+  background-color: rgba(39, 39, 42, 0.3);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(63, 63, 68, 0.3);
+}
+
+.glass-strong {
+  background-color: rgba(39, 39, 42, 0.7);
+  backdrop-filter: blur(32px);
+  -webkit-backdrop-filter: blur(32px);
+  border: 1px solid rgba(63, 63, 68, 0.6);
+}
+
+/* ============================================
+   GLOW EFFECTS (TEAL PRIMARY)
+   ============================================ */
+
+.glow-teal {
+  box-shadow: 0 0 40px rgba(13, 148, 136, 0.15);
+}
+
+.glow-teal-strong {
+  box-shadow: 0 0 60px rgba(13, 148, 136, 0.25);
+}
+
+.glow-teal-subtle {
+  box-shadow: 0 0 20px rgba(13, 148, 136, 0.1);
+}
+
+.glow-gold {
+  box-shadow: 0 0 40px rgba(245, 158, 11, 0.15);
+}
+
+.glow-border-teal {
+  box-shadow: 0 0 0 1px rgba(13, 148, 136, 0.3), 0 0 20px rgba(13, 148, 136, 0.1);
+}
+
+/* Hover glow animation */
+.hover-glow {
+  transition: box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.hover-glow:hover {
+  box-shadow: 0 0 30px rgba(13, 148, 136, 0.2);
+  border-color: rgba(13, 148, 136, 0.5);
+}
+
+.shadow-glow {
+  box-shadow: 0 0 20px rgba(13, 148, 136, 0.2);
+}
+
+/* ============================================
+   GRADIENT TEXT
+   ============================================ */
+
+.text-gradient-teal {
+  background: linear-gradient(135deg, #2DD4BF 0%, #0D9488 50%, #0F766E 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.text-gradient-gold {
+  background: linear-gradient(135deg, #FBBF24 0%, #F59E0B 50%, #D97706 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ============================================
+   ICON BOX BACKGROUNDS
+   ============================================ */
+
+.icon-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.75rem;
+}
+
+.icon-box-teal {
+  background: rgba(13, 148, 136, 0.2);
+  color: var(--teal-400);
+}
+
+.icon-box-gold {
+  background: rgba(245, 158, 11, 0.2);
+  color: var(--gold-400);
+}
+
+.icon-box-green {
+  background: rgba(34, 197, 94, 0.2);
+  color: #22C55E;
+}
+
+.icon-box-red {
+  background: rgba(239, 68, 68, 0.2);
+  color: #EF4444;
+}
+
+/* Icon box sizes */
+.icon-box-sm { width: 2rem; height: 2rem; }
+.icon-box-md { width: 2.5rem; height: 2.5rem; }
+.icon-box-lg { width: 3rem; height: 3rem; }
+.icon-box-xl { width: 3.5rem; height: 3.5rem; }
+
+/* ============================================
+   ANIMATIONS
+   ============================================ */
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slide-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slide-in-up {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes scale-in {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes glow-pulse {
+  0%, 100% { box-shadow: 0 0 20px rgba(13, 148, 136, 0.2); }
+  50% { box-shadow: 0 0 40px rgba(13, 148, 136, 0.4); }
+}
+
+.animate-fade-in { animation: fade-in 0.5s ease-out forwards; }
+.animate-slide-up { animation: slide-up 0.5s ease-out forwards; }
+.animate-slide-in-up { animation: slide-in-up 0.4s ease-out forwards; }
+.animate-scale-in { animation: scale-in 0.3s ease-out forwards; }
+.animate-glow-pulse { animation: glow-pulse 2s ease-in-out infinite; }
+
+/* Staggered animation delays */
+.delay-100 { animation-delay: 100ms; }
+.delay-200 { animation-delay: 200ms; }
+.delay-300 { animation-delay: 300ms; }
+.delay-400 { animation-delay: 400ms; }
+.delay-500 { animation-delay: 500ms; }
+
+/* ============================================
+   STATUS INDICATORS (for bookings, cleanings)
+   ============================================ */
+
+@keyframes pulse-ring-available {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+  50% { box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.15); }
+}
+
+@keyframes pulse-ring-occupied {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(13, 148, 136, 0); }
+  50% { box-shadow: 0 0 0 6px rgba(13, 148, 136, 0.25); }
+}
+
+@keyframes pulse-ring-maintenance {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
+  50% { box-shadow: 0 0 0 8px rgba(245, 158, 11, 0.35); }
+}
+
+.status-available {
+  animation: pulse-ring-available 10s ease-in-out infinite;
+  border: 2px solid rgb(34, 197, 94);
+}
+
+.status-occupied {
+  animation: pulse-ring-occupied 6s ease-in-out infinite;
+  border: 2px solid rgb(13, 148, 136);
+}
+
+.status-maintenance {
+  animation: pulse-ring-maintenance 3.5s ease-in-out infinite;
+  border: 2px solid rgb(245, 158, 11);
+}
+
+.status-urgent {
+  box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.5), 0 0 20px rgba(239, 68, 68, 0.3);
+  border: 2px solid rgb(239, 68, 68);
+}
+
+/* ============================================
+   SCROLLBAR STYLING
+   ============================================ */
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--charcoal-900);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--charcoal-700);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--charcoal-600);
+}
+
+/* ============================================
+   CARD VARIANTS
+   ============================================ */
+
+.card-default {
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: 0.75rem;
+}
+
+.card-glass {
+  background: rgba(39, 39, 42, 0.5);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(63, 63, 68, 0.5);
+  border-radius: 0.75rem;
+}
+
+.card-glow {
+  background: var(--charcoal-900);
+  border: 1px solid var(--charcoal-800);
+  border-radius: 0.75rem;
+  box-shadow: 0 0 40px rgba(13, 148, 136, 0.1);
+}
+
+.card-interactive {
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.card-interactive:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 30px rgba(13, 148, 136, 0.15);
+  border-color: rgba(13, 148, 136, 0.3);
+}
+
+/* ============================================
+   INPUT STYLING
+   ============================================ */
+
+.input-themed {
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
+  color: var(--foreground);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.input-themed:focus {
+  outline: none;
+  border-color: var(--teal-600);
+  box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.2);
+}
+
+.input-themed::placeholder {
+  color: var(--muted-foreground);
+}
+
+/* ============================================
+   BUTTON STYLES
+   ============================================ */
+
+.btn-primary {
+  background: var(--primary);
+  color: var(--primary-foreground);
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+
+.btn-primary:hover {
+  box-shadow: 0 0 20px rgba(13, 148, 136, 0.3);
+}
+
+.btn-primary:active {
+  transform: scale(0.98);
+}
+
+.btn-secondary {
+  background: var(--charcoal-800);
+  color: var(--foreground);
+  border: 1px solid var(--charcoal-700);
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.btn-secondary:hover {
+  background: var(--charcoal-700);
+  border-color: var(--charcoal-600);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--muted-foreground);
+  transition: color 0.2s, background 0.2s;
+}
+
+.btn-ghost:hover {
+  color: var(--foreground);
+  background: var(--charcoal-800);
+}
+
+/* ============================================
+   BADGE STYLES
+   ============================================ */
+
+.badge-teal {
+  background: rgba(13, 148, 136, 0.2);
+  color: var(--teal-400);
+  border: 1px solid rgba(13, 148, 136, 0.3);
+}
+
+.badge-gold {
+  background: rgba(245, 158, 11, 0.2);
+  color: var(--gold-400);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.badge-success {
+  background: rgba(34, 197, 94, 0.2);
+  color: #4ADE80;
+  border: 1px solid rgba(34, 197, 94, 0.3);
+}
+
+.badge-error {
+  background: rgba(239, 68, 68, 0.2);
+  color: #F87171;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.badge-warning {
+  background: rgba(245, 158, 11, 0.2);
+  color: #FBBF24;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.badge-muted {
+  background: rgba(113, 113, 122, 0.2);
+  color: var(--charcoal-500);
+  border: 1px solid rgba(113, 113, 122, 0.3);
+}
+
+/* Booking source badges */
+.badge-direct { background: rgba(13, 148, 136, 0.2); color: var(--teal-400); }
+.badge-airbnb { background: rgba(255, 90, 95, 0.2); color: #FF5A5F; }
+.badge-booking { background: rgba(0, 53, 128, 0.2); color: #003580; }
+
+/* ============================================
+   SIDEBAR STYLES
+   ============================================ */
+
+.sidebar {
+  background: var(--sidebar);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-right: 1px solid var(--sidebar-border);
+}
+
+.sidebar-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  color: var(--muted-foreground);
+}
+
+.sidebar-nav-item:hover {
+  color: var(--foreground);
+  background: var(--sidebar-hover);
+}
+
+.sidebar-nav-item-active {
+  color: var(--teal-400);
+  background: rgba(13, 148, 136, 0.1);
+  border: 1px solid rgba(13, 148, 136, 0.2);
+}
+
+/* ============================================
+   UTILITY CLASSES
+   ============================================ */
+
+/* Text colors */
+.text-teal { color: var(--teal-600); }
+.text-teal-400 { color: var(--teal-400); }
+.text-gold { color: var(--gold-500); }
+.text-gold-400 { color: var(--gold-400); }
+
+/* Background colors */
+.bg-charcoal-950 { background: var(--charcoal-950); }
+.bg-charcoal-900 { background: var(--charcoal-900); }
+.bg-charcoal-800 { background: var(--charcoal-800); }
+.bg-charcoal-700 { background: var(--charcoal-700); }
+
+/* Border colors */
+.border-teal { border-color: var(--teal-600); }
+.border-teal-500\/30 { border-color: rgba(13, 148, 136, 0.3); }
+.border-teal-500\/50 { border-color: rgba(13, 148, 136, 0.5); }
+.border-charcoal-700 { border-color: var(--charcoal-700); }
+.border-charcoal-800 { border-color: var(--charcoal-800); }
+
+/* Divider */
+.divider {
+  border-color: var(--charcoal-800);
+}
+
+/* Hide scrollbar */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
