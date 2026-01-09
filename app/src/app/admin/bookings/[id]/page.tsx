@@ -1,11 +1,19 @@
 "use client";
 
-import { use } from "react";
+import { use, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { getBookingById, updateBooking } from "@/lib/db/bookings";
 import { getUnitById } from "@/lib/db/units";
-import { BookingStatusBadge, BookingSourceBadge } from "@/components/bookings";
+import {
+  getPaymentsByBooking,
+  getTotalPaidForBooking,
+  createPayment,
+  deletePayment,
+} from "@/lib/db/payments";
+import { BookingStatusBadge, BookingSourceBadge, ContractStatusBadge } from "@/components/bookings";
+import { PaymentList, AddPaymentForm, PaymentSummary } from "@/components/payments";
 import { formatCurrency, formatDate, formatDateRange } from "@/lib/utils";
+import { Payment } from "@/types";
 
 export default function BookingDetailPage({
   params,
@@ -15,6 +23,22 @@ export default function BookingDetailPage({
   const router = useRouter();
   const { id } = use(params);
   const booking = getBookingById(id);
+
+  const [payments, setPayments] = useState<Payment[]>([]);
+  const [totalPaid, setTotalPaid] = useState(0);
+  const [showPaymentForm, setShowPaymentForm] = useState(false);
+
+  useEffect(() => {
+    if (booking) {
+      loadPayments();
+    }
+  }, [booking]);
+
+  const loadPayments = () => {
+    const bookingPayments = getPaymentsByBooking(id);
+    setPayments(bookingPayments);
+    setTotalPaid(getTotalPaidForBooking(id));
+  };
 
   if (!booking) {
     return (
@@ -42,6 +66,19 @@ export default function BookingDetailPage({
   const handleStatusChange = (newStatus: string) => {
     updateBooking(booking.id, { status: newStatus as any });
     router.refresh();
+  };
+
+  const handleAddPayment = (payment: Omit<Payment, "id" | "created_at">) => {
+    createPayment(payment);
+    loadPayments();
+    setShowPaymentForm(false);
+  };
+
+  const handleDeletePayment = (paymentId: string) => {
+    if (confirm("¿Estás seguro de eliminar este pago?")) {
+      deletePayment(paymentId);
+      loadPayments();
+    }
   };
 
   return (
@@ -81,6 +118,7 @@ export default function BookingDetailPage({
           <div className="flex items-center gap-2">
             <BookingSourceBadge source={booking.source} />
             <BookingStatusBadge status={booking.status} />
+            <ContractStatusBadge status={(booking as any).contract_status} />
           </div>
         </div>
       </div>
@@ -262,35 +300,72 @@ export default function BookingDetailPage({
             </div>
           </div>
 
+          {/* Payments Section */}
+          <div className="bg-charcoal-800/60 border border-charcoal-700 rounded-lg p-6">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg font-semibold text-white">Pagos</h2>
+              <button
+                onClick={() => setShowPaymentForm(true)}
+                className="px-3 py-1.5 bg-teal-600 text-white text-sm rounded-lg hover:bg-teal-700 transition-colors flex items-center gap-1.5"
+              >
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 4v16m8-8H4"
+                  />
+                </svg>
+                Agregar Pago
+              </button>
+            </div>
+
+            <PaymentList
+              payments={payments}
+              onDeletePayment={handleDeletePayment}
+            />
+          </div>
+
           {/* Contract Information */}
-          {booking.contract_url && (
+          {(booking as any).booking_type === "long_term" && (
             <div className="bg-charcoal-800/60 border border-charcoal-700 rounded-lg p-6">
               <h2 className="text-lg font-semibold text-white mb-4">
-                Contrato
+                Rental Contract
               </h2>
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-zinc-400">Estado del contrato</p>
+                  <p className="text-sm text-zinc-400">Contract Status</p>
                   <p className="text-white mt-1">
-                    {booking.contract_signed_at ? (
+                    {(booking as any).contract_status === "signed" ? (
                       <span className="text-green-600 font-medium">
-                        Firmado el {formatDate(booking.contract_signed_at)}
+                        Signed{booking.contract_signed_at && ` on ${formatDate(booking.contract_signed_at)}`}
+                      </span>
+                    ) : (booking as any).contract_status === "sent" ? (
+                      <span className="text-yellow-600 font-medium">
+                        Sent for signature
+                      </span>
+                    ) : (booking as any).contract_status === "draft" ? (
+                      <span className="text-zinc-400 font-medium">
+                        Draft
                       </span>
                     ) : (
-                      <span className="text-yellow-600 font-medium">
-                        Pendiente de firma
+                      <span className="text-zinc-500 font-medium">
+                        Not needed
                       </span>
                     )}
                   </p>
                 </div>
-                <a
-                  href={booking.contract_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="px-4 py-2 bg-charcoal-700 text-zinc-300 rounded-lg hover:bg-charcoal-600 transition-colors"
+                <button
+                  onClick={() => router.push(`/admin/bookings/${booking.id}/contract`)}
+                  className="px-4 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition-colors"
                 >
-                  Ver contrato
-                </a>
+                  View Contract
+                </button>
               </div>
             </div>
           )}
@@ -298,37 +373,13 @@ export default function BookingDetailPage({
 
         {/* Sidebar */}
         <div className="space-y-6">
-          {/* Payment Status */}
-          <div className="bg-charcoal-800/60 border border-charcoal-700 rounded-lg p-6">
-            <h3 className="text-sm font-semibold text-zinc-300 mb-3">
-              Estado de Pago
-            </h3>
-            <div
-              className={`px-4 py-3 rounded-lg text-center ${
-                booking.payment_status === "paid"
-                  ? "bg-green-50 text-green-800 border border-green-200"
-                  : booking.payment_status === "partial"
-                  ? "bg-yellow-50 text-yellow-800 border border-yellow-200"
-                  : "bg-red-50 text-red-800 border border-red-200"
-              }`}
-            >
-              <div className="text-lg font-semibold">
-                {booking.payment_status === "paid"
-                  ? "Pagado"
-                  : booking.payment_status === "partial"
-                  ? "Pago Parcial"
-                  : booking.payment_status === "refunded"
-                  ? "Reembolsado"
-                  : "Pendiente"}
-              </div>
-              <div className="text-sm mt-1">
-                {formatCurrency(
-                  booking.pricing.total,
-                  booking.pricing.currency
-                )}
-              </div>
-            </div>
-          </div>
+          {/* Payment Summary */}
+          <PaymentSummary
+            totalDue={booking.pricing.total}
+            totalPaid={totalPaid}
+            currency={booking.pricing.currency}
+            paymentCount={payments.length}
+          />
 
           {/* Quick Actions */}
           <div className="bg-charcoal-800/60 border border-charcoal-700 rounded-lg p-6">
@@ -421,6 +472,17 @@ export default function BookingDetailPage({
           </div>
         </div>
       </div>
+
+      {/* Add Payment Modal */}
+      {showPaymentForm && (
+        <AddPaymentForm
+          bookingId={booking.id}
+          totalDue={booking.pricing.total}
+          currency={booking.pricing.currency}
+          onSubmit={handleAddPayment}
+          onCancel={() => setShowPaymentForm(false)}
+        />
+      )}
     </div>
   );
 }

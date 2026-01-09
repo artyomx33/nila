@@ -276,3 +276,31 @@ export interface FilterOption {
   value: string;
   count?: number;
 }
+
+// PAYMENTS
+// ============================================
+
+export type PaymentType =
+  | "reservation_deposit"
+  | "security_deposit"
+  | "rent"
+  | "cleaning"
+  | "utilities"
+  | "damage"
+  | "refund"
+  | "other";
+
+export type PaymentMethod = "cash" | "card" | "transfer" | "paypal" | "stripe" | "other";
+
+export interface Payment {
+  id: string;
+  booking_id: string;
+  amount: number;
+  currency: "MXN" | "USD";
+  payment_type: PaymentType;
+  method: PaymentMethod;
+  reference?: string | null;
+  notes?: string | null;
+  paid_at: Date;
+  created_at: Date;
+}

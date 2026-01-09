@@ -444,6 +444,54 @@ export async function createPayment(paymentData: NilaPaymentInsert) {
   return data as NilaPayment;
 }
 
+export async function getPaymentsByType(bookingId: string, paymentType: NilaPayment['payment_type']) {
+  const { data, error } = await supabase
+    .from('nila_payments')
+    .select('*')
+    .eq('booking_id', bookingId)
+    .eq('payment_type', paymentType)
+    .order('paid_at', { ascending: false });
+
+  if (error) throw error;
+  return data as NilaPayment[];
+}
+
+export async function getTotalPaymentsByType(bookingId: string, paymentType: NilaPayment['payment_type']) {
+  const payments = await getPaymentsByType(bookingId, paymentType);
+  return payments.reduce((sum, p) => sum + Number(p.amount), 0);
+}
+
+export async function getBookingPaymentSummary(bookingId: string) {
+  const payments = await getPaymentsByBooking(bookingId);
+
+  const summary = {
+    total: 0,
+    security_deposit: 0,
+    rent: 0,
+    reservation_deposit: 0,
+    cleaning: 0,
+    utilities: 0,
+    other: 0,
+  };
+
+  payments.forEach((payment) => {
+    const amount = Number(payment.amount);
+    summary.total += amount;
+
+    if (payment.payment_type) {
+      if (payment.payment_type in summary) {
+        summary[payment.payment_type as keyof typeof summary] += amount;
+      } else {
+        summary.other += amount;
+      }
+    } else {
+      summary.other += amount;
+    }
+  });
+
+  return summary;
+}
+
 // ============================================
 // MAINTENANCE TASKS
 // ============================================

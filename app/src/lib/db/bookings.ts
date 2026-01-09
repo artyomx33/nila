@@ -505,6 +505,25 @@ export function getActiveBookings(): Booking[] {
 }
 
 /**
+ * Update contract status
+ */
+export function updateContractStatus(
+  id: string,
+  status: "not_needed" | "draft" | "sent" | "signed"
+): Booking | undefined {
+  const updates: Partial<Booking> = {
+    contract_status: status,
+  };
+
+  // If marking as signed, add signed timestamp
+  if (status === "signed") {
+    updates.contract_signed_at = new Date();
+  }
+
+  return updateBooking(id, updates as any);
+}
+
+/**
  * Reset bookings to mock data (for testing)
  */
 export function resetBookings(): void {
