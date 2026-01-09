@@ -143,7 +143,7 @@ export const heroTextReveal: Variants = {
 };
 
 // Card hover effect
-export const cardHover = {
+export const cardHover: Variants = {
   rest: {
     scale: 1,
     y: 0,
@@ -153,7 +153,7 @@ export const cardHover = {
     y: -4,
     transition: {
       duration: 0.3,
-      ease: "easeOut",
+      ease: "easeOut" as const,
     },
   },
 };

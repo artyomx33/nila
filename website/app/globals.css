@@ -1,6 +1,57 @@
 @import "tailwindcss";
 
 /* ============================================
+   NILA Website - Theme Definition
+   ============================================ */
+@theme {
+  /* NILA Primary - Teal (Bacalar lagoon inspired) */
+  --color-nila-50: #F0FDFA;
+  --color-nila-100: #CCFBF1;
+  --color-nila-200: #99F6E4;
+  --color-nila-300: #5EEAD4;
+  --color-nila-400: #2DD4BF;
+  --color-nila-500: #14B8A6;
+  --color-nila-600: #0D9488;
+  --color-nila-700: #0F766E;
+  --color-nila-800: #115E59;
+  --color-nila-900: #134E4A;
+  --color-nila-950: #042F2E;
+
+  /* Accent - Gold (sunset) */
+  --color-gold-50: #FFFBEB;
+  --color-gold-100: #FEF3C7;
+  --color-gold-200: #FDE68A;
+  --color-gold-300: #FCD34D;
+  --color-gold-400: #FBBF24;
+  --color-gold-500: #F59E0B;
+  --color-gold-600: #D97706;
+  --color-gold-700: #B45309;
+  --color-gold-800: #92400E;
+  --color-gold-900: #78350F;
+
+  /* Charcoal (dark theme) */
+  --color-charcoal-50: #FAFAFA;
+  --color-charcoal-100: #F4F4F5;
+  --color-charcoal-200: #E4E4E7;
+  --color-charcoal-300: #D4D4D8;
+  --color-charcoal-400: #A1A1AA;
+  --color-charcoal-500: #71717A;
+  --color-charcoal-600: #52525B;
+  --color-charcoal-700: #3F3F46;
+  --color-charcoal-800: #27272A;
+  --color-charcoal-900: #18181B;
+  --color-charcoal-950: #0D0D0F;
+
+  /* Fonts */
+  --font-sans: var(--font-dm-sans), system-ui, sans-serif;
+  --font-serif: var(--font-dm-serif), Georgia, serif;
+
+  /* Box shadows */
+  --shadow-glow: 0 0 20px rgba(13, 148, 136, 0.2);
+  --shadow-glow-strong: 0 0 40px rgba(13, 148, 136, 0.3);
+}
+
+/* ============================================
    NILA Website - Global Styles
    Tropical Dark Luxury Theme
    ============================================ */
@@ -259,7 +310,8 @@
     @apply inline-flex items-center justify-center px-6 py-3
            bg-nila-600 text-white text-sm font-medium rounded-lg
            transition-all duration-300
-           hover:bg-nila-700 animate-glow-pulse;
+           hover:bg-nila-700;
+    animation: glow-pulse 3s ease-in-out infinite;
   }
 
   /* Typography - updated for dark theme */
@@ -290,8 +342,14 @@
   }
 
   .card-glass-hover {
-    @apply card-glass hover:bg-charcoal-900/60 hover:border-nila-600/30
-           hover:shadow-glow hover:-translate-y-1;
+    @apply backdrop-blur-sm bg-charcoal-900/40 border border-charcoal-800/50
+           rounded-xl p-6 transition-all duration-300
+           hover:bg-charcoal-900/60 hover:border-nila-600/30
+           hover:-translate-y-1;
+  }
+
+  .card-glass-hover:hover {
+    box-shadow: 0 0 20px rgba(13, 148, 136, 0.2);
   }
 
   .card-service {
